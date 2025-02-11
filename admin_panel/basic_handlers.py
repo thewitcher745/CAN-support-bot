@@ -30,7 +30,7 @@ async def show_help(update, context):
 
 /setcategory: This command assigns a list of user ID's to the selected category. After replying to the user list with this command, select which category you would like to add the users to. This overwrites the existing list. 📈
 
-/unsetcategory <user id>: This command removes a user with a given user ID from a category. After using this command, select which category you would like to remove the user from, or use this command in reply to a message to remove the sender from a category. 📈
+/addtocategory: This command adds a list of ID's to the selected category. After replying to the user list with this command, select which category you would like to add the users to. 📈
 
 /bulksend <user id>: This command sends a message to all users in a category, selected in a dialog after the command is used. 📈
 """

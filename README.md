@@ -1,11 +1,12 @@
 # Telegram Message Sender Bot
 
-A simple Telegram bot that allows sending messages to specific users by their user ID.
+A simple Telegram bot that allows sending or forwarding messages to specific users by their user ID.
 
 ## Features
 
-- Send messages to any Telegram user using their user ID (Provided they have given the bot the necessary permission)
-- Fallback to sending test messages back to the sender
+- Sends or forwards messages to any Telegram user using their user ID (Provided they have given the bot the necessary permission)
+- Message forwarding is done anonymously, and is accomplished by replying to the message to be forwarded with the `/send` command.
+- Fallback to sending messages back to the sender.
 - Error handling for invalid user IDs or permission issues
 
 ## Prerequisites
@@ -17,8 +18,8 @@ A simple Telegram bot that allows sending messages to specific users by their us
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/telegram-message-sender-bot.git
-   cd telegram-message-sender-bot
+   git clone https://github.com/thewitcher745/CAN-support-bot
+   cd CAN-support-bot
    ```
 
 2. Install the required packages:
@@ -46,7 +47,10 @@ A simple Telegram bot that allows sending messages to specific users by their us
    ```
    Where `user_id` is the Telegram user ID of the recipient.
 
-4. If no user ID is provided, the bot will send the test message back to you.
+4. To forward a message, follow the instructions in the previous step, with the only difference being that you need to reply to the desired message 
+with the command.
+
+5. If no user ID is provided, the bot will send the test message back to you.
 
 ## How to Find a User ID
 

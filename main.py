@@ -2,7 +2,7 @@ from telegram.ext import Application, CommandHandler
 import logging
 from dotenv import dotenv_values
 
-from admin_panel.handlers import send_message
+from admin_panel.handlers import send_message, show_help
 
 # Enable logging
 logging.basicConfig(
@@ -21,6 +21,7 @@ def main():
 
     # Commands
     application.add_handler(CommandHandler('send', send_message))
+    application.add_handler(CommandHandler('help', show_help))
 
     # Start the bot
     application.run_polling()

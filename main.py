@@ -32,8 +32,7 @@ async def send_message(update: Update, context: CallbackContext):
             target_user_id = update.message.text.split(' ')[1]
 
         except IndexError:
-            update.message.reply_text('No target user specified, reflecting the test message back to sender...')
-            print(update.message)
+            await update.message.reply_text('No target user specified, reflecting the test message back to sender...')
             target_user_id = update.message.from_user.id
 
         # Confirmation message

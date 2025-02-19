@@ -11,6 +11,16 @@ def start(update, context):
     )
 
 
+# Define command handlers
+def show_help(update, context):
+    """Send a welcome message when the command /start is issued."""
+    help_message = """
+This bot is used to contact users. Currently it supports the following commands and functionalities:
+/send <user id>: This command forwards a message to a single user given the user's ID. To select what message to forward, reply to the desired message with this command. If no user ID is given, the message is reflected back to the sender. If no message is replied to, a test message is sent instead.
+"""
+    update.message.reply_text(help_message)
+
+
 async def send_message(update: Update, context: CallbackContext):
     """Send a message to the target user ID."""
     try:

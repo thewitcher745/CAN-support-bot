@@ -66,9 +66,15 @@ async def set_category(update: Update, context: CallbackContext):
             context.user_data['target_user_id'] = target_user_id
 
         except IndexError:
-            await update.message.reply_text('⚠️ You have to specify a target user ID for this command.')
+            # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
+            if update.message.reply_to_message:
+                target_user_id = update.message.reply_to_message.from_user.id
+                context.user_data['target_user_id'] = target_user_id
 
-            return
+            else:
+                # If the command wasn't used in reply to a message, show an error message
+                await update.message.reply_text('⚠️ You have to specify a target user ID for this command.')
+                return
 
         # Show what lists the user is currently in
         user_categories = get_categories_for_user(target_user_id)
@@ -135,9 +141,15 @@ async def unset_category(update: Update, context: CallbackContext):
             context.user_data['target_user_id'] = target_user_id
 
         except IndexError:
-            await update.message.reply_text('⚠️ You have to specify a target user ID for this command.')
+            # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
+            if update.message.reply_to_message:
+                target_user_id = update.message.reply_to_message.from_user.id
+                context.user_data['target_user_id'] = target_user_id
 
-            return
+            else:
+                # If the command wasn't used in reply to a message, show an error message
+                await update.message.reply_text('⚠️ You have to specify a target user ID for this command.')
+                return
 
         # Show what lists the user is currently in
         user_categories = get_categories_for_user(target_user_id)

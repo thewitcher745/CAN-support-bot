@@ -122,10 +122,10 @@ async def set_category(update: Update, context: CallbackContext):
         return "FINALIZE_SET_CATEGORY"
 
     except error.BadRequest as e:
-        await update.message.reply_text(f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
 
     except Exception as e:
-        await update.message.reply_text(f'🚨 An error occurred: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
 
     return ConversationHandler.END
 
@@ -146,10 +146,10 @@ async def finalize_set_category(update: Update, context: CallbackContext):
             f'✅ User {target_user_id} added to category {get_category_label_by_id(category_id)} successfully!')
 
     except error.BadRequest as e:
-        await update.message.reply_text(f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
 
     except Exception as e:
-        await update.message.reply_text(f'🚨 An error occurred: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
 
     # Clear the user_data object
     context.user_data.clear()
@@ -195,10 +195,10 @@ async def unset_category(update: Update, context: CallbackContext):
         return "FINALIZE_UNSET_CATEGORY"
 
     except error.BadRequest as e:
-        await update.message.reply_text(f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
 
     except Exception as e:
-        await update.message.reply_text(f'🚨 An error occurred: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
 
     return ConversationHandler.END
 
@@ -219,10 +219,10 @@ async def finalize_unset_category(update: Update, context: CallbackContext):
             f'✅ User {target_user_id} removed from category {get_category_label_by_id(category_id)} successfully!')
 
     except error.BadRequest as e:
-        await update.message.reply_text(f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
 
     except Exception as e:
-        await update.message.reply_text(f'🚨 An error occurred: {str(e)}')
+        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
 
     # Clear the user_data object
     context.user_data.clear()

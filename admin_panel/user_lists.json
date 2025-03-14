@@ -2,13 +2,11 @@
     "0": {
         "label": "INTERESTED",
         "users": [
-            "123456"
         ]
     },
     "1": {
         "label": "VIP",
         "users": [
-            "123"
         ]
     },
     "2": {

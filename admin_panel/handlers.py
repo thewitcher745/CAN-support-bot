@@ -52,7 +52,7 @@ async def send_message(update: Update, context: CallbackContext):
 
         except IndexError:
             await update.message.reply_text('⚠️ No target user specified, reflecting message back to sender...')
-            target_user_id = str(update.message.from_user.id)
+            target_user_id = update.message.from_user.id
 
         # If the command is used in reply to a previous message, that message will be forwarded to the recipient without the sender data.
         if update.message.reply_to_message:
@@ -93,7 +93,7 @@ async def set_category(update: Update, context: CallbackContext):
         except IndexError:
             # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
             if update.message.reply_to_message:
-                target_user_id = str(update.message.reply_to_message.api_kwargs['forward_from']['id'])
+                target_user_id = update.message.reply_to_message.api_kwargs['forward_from']['id']
                 context.user_data['target_user_id'] = target_user_id
 
             else:
@@ -171,7 +171,7 @@ async def unset_category(update: Update, context: CallbackContext):
         except IndexError:
             # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
             if update.message.reply_to_message:
-                target_user_id = str(update.message.reply_to_message.api_kwargs['forward_from']['id'])
+                target_user_id = update.message.reply_to_message.api_kwargs['forward_from']['id']
                 context.user_data['target_user_id'] = target_user_id
 
             else:

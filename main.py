@@ -2,7 +2,7 @@ from telegram.ext import Application, CommandHandler, ConversationHandler, Callb
 import logging
 from dotenv import dotenv_values
 
-from admin_panel.handlers import send_message, show_help, set_category, finalize_set_category, cancel_operation, unset_category, \
+from admin_panel.handlers import start, send_message, show_help, set_category, finalize_set_category, cancel_operation, unset_category, \
     finalize_unset_category
 
 # Enable logging
@@ -21,6 +21,7 @@ def main():
     application = Application.builder().token(TOKEN).read_timeout(30).write_timeout(30).build()
 
     # Commands
+    application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('send', send_message))
     application.add_handler(CommandHandler('help', show_help))
     application.add_handler(ConversationHandler(

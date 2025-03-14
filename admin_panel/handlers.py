@@ -2,27 +2,49 @@ from telegram.ext import CallbackContext, ConversationHandler
 from telegram import Update, error, InlineKeyboardMarkup, InlineKeyboardButton
 
 from admin_panel.utilities import get_categories_for_user, get_category_id_list, add_user_to_category, get_category_label_by_id, \
-    remove_user_from_category
+    remove_user_from_category, is_user_admin
 
 
 # Define command handlers
+async def start(update, context):
+    """Send a welcome message when /start is used if the user isn't an admin, otherwise show a welcome message for the admin panel. If the user isn't
+    an admin, add them to the  INTERESTED category."""
+    # Show a welcome message to normal users
+    if not is_user_admin(update.message.from_user.id):
+        await update.message.reply_text(
+            f"🤖 Hello, {update.message.from_user.first_name}! I'm a bot that helps you contact CAN support. Use /help to see what I can do.")
+        add_user_to_category(update.message.from_user.id, '0')
+
+    # Show admin panel welcome message to admins.
+    else:
+        await update.message.reply_text(
+            f"🔰 Welcome to the admin panel, {update.message.from_user.first_name}! Use /help to see what I can do.")
+
 
 async def show_help(update, context):
-    """Send a welcome message when the command /start is issued."""
-    help_message = """
+    """Show different help messages for admins and regular users."""
+    if is_user_admin(update.message.from_user.id):
+        help_message = """
 📝 This bot is used to contact users. Currently it supports the following commands and functionalities:
 
 /send <user id>: This command forwards a message to a single user given the user's ID. To select what message to forward, reply to the desired message with this command. If no user ID is given, the message is reflected back to the sender. If no message is replied to, a test message is sent instead. 📱
 
-/setcategory <user id>: This command puts a user with a given user ID into a category. After using this command, select which category you would like to put the user in. 📈
+/setcategory <user id>: This command puts a user with a given user ID into a category. After using this command, select which category you would like to put the user in, or use this command in reply to a message to put the sender into a category. 📈
 
-/unsetcategory <user id>: This command removes a user with a given user ID from a category. After using this command, select which category you would like to remove the user from. 📈
+/unsetcategory <user id>: This command removes a user with a given user ID from a category. After using this command, select which category you would like to remove the user from, or use this command in reply to a message to remove the sender from a category. 📈
 """
+    else:
+        help_message = """
+📝 This bot is used to contact users. Select your desired option after using the /start command."""
+
     await update.message.reply_text(help_message)
 
 
 async def send_message(update: Update, context: CallbackContext):
     """Send a message to the target user ID."""
+    if not is_user_admin(update.message.from_user.id):
+        return
+
     try:
         # Get the target user ID from the sender
         try:
@@ -59,6 +81,9 @@ async def send_message(update: Update, context: CallbackContext):
 
 async def set_category(update: Update, context: CallbackContext):
     """Adds a user to a category."""
+    if not is_user_admin(update.message.from_user.id):
+        return ConversationHandler.END
+
     try:
         # Get the target user ID from the sender
         try:
@@ -134,6 +159,9 @@ async def finalize_set_category(update: Update, context: CallbackContext):
 
 async def unset_category(update: Update, context: CallbackContext):
     """Removes a user from a category."""
+    if not is_user_admin(update.message.from_user.id):
+        return ConversationHandler.END
+
     try:
         # Get the target user ID from the sender
         try:

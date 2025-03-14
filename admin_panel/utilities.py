@@ -66,3 +66,10 @@ def get_category_label_by_id(category_id):
     """Get the label of a category given its ID."""
     user_lists = get_user_lists()
     return user_lists[category_id]['label']
+
+
+def is_user_admin(user_id):
+    with open('admin_panel/admins.json', 'r') as f:
+        admins = json.load(f)
+
+    return user_id in admins['admins']

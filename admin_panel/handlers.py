@@ -10,9 +10,7 @@ def start(update, context):
         'Use /help for a guide on what this bot can do.'
     )
 
-
-# Define command handlers
-def show_help(update, context):
+async def show_help(update, context):
     """Send a welcome message when the command /start is issued."""
     help_message = """
 This bot is used to contact users. Currently it supports the following commands and functionalities:

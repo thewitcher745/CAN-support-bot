@@ -8,7 +8,7 @@ from admin_panel.utilities import get_categories_for_user, get_category_id_list,
 # Define command handlers
 async def start(update, context):
     """Send a welcome message when /start is used if the user isn't an admin, otherwise show a welcome message for the admin panel. If the user isn't
-    an admin, add them to the  INTERESTED category."""
+    an admin, add them to the INTERESTED category."""
     # Show a welcome message to normal users
     if not is_user_admin(update.message.from_user.id):
         await update.message.reply_text(
@@ -93,7 +93,7 @@ async def set_category(update: Update, context: CallbackContext):
         except IndexError:
             # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
             if update.message.reply_to_message:
-                target_user_id = update.message.reply_to_message.from_user.id
+                target_user_id = update.message.reply_to_message.api_kwargs['forward_from']['id']
                 context.user_data['target_user_id'] = target_user_id
 
             else:
@@ -171,7 +171,7 @@ async def unset_category(update: Update, context: CallbackContext):
         except IndexError:
             # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
             if update.message.reply_to_message:
-                target_user_id = update.message.reply_to_message.from_user.id
+                target_user_id = update.message.reply_to_message.api_kwargs['forward_from']['id']
                 context.user_data['target_user_id'] = target_user_id
 
             else:

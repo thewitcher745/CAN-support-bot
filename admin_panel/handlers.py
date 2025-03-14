@@ -13,7 +13,7 @@ async def start(update, context):
     if not is_user_admin(update.message.from_user.id):
         await update.message.reply_text(
             f"🤖 Hello, {update.message.from_user.first_name}! I'm a bot that helps you contact CAN support. Use /help to see what I can do.")
-        add_user_to_category(update.message.from_user.id, '0')
+        add_user_to_category(str(update.message.from_user.id), '0')
 
     # Show admin panel welcome message to admins.
     else:
@@ -93,7 +93,7 @@ async def set_category(update: Update, context: CallbackContext):
         except IndexError:
             # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
             if update.message.reply_to_message:
-                target_user_id = update.message.reply_to_message.api_kwargs['forward_from']['id']
+                target_user_id = str(update.message.reply_to_message.api_kwargs['forward_from']['id'])
                 context.user_data['target_user_id'] = target_user_id
 
             else:
@@ -171,7 +171,7 @@ async def unset_category(update: Update, context: CallbackContext):
         except IndexError:
             # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
             if update.message.reply_to_message:
-                target_user_id = update.message.reply_to_message.api_kwargs['forward_from']['id']
+                target_user_id = str(update.message.reply_to_message.api_kwargs['forward_from']['id'])
                 context.user_data['target_user_id'] = target_user_id
 
             else:

@@ -1,8 +1,9 @@
-from telegram.ext import Application, CommandHandler
+from telegram.ext import Application, CommandHandler, ConversationHandler, CallbackQueryHandler
 import logging
 from dotenv import dotenv_values
 
-from admin_panel.handlers import send_message, show_help
+from admin_panel.handlers import send_message, show_help, set_category, finalize_set_category, cancel_operation, unset_category, \
+    finalize_unset_category
 
 # Enable logging
 logging.basicConfig(
@@ -22,6 +23,16 @@ def main():
     # Commands
     application.add_handler(CommandHandler('send', send_message))
     application.add_handler(CommandHandler('help', show_help))
+    application.add_handler(ConversationHandler(
+        entry_points=[CommandHandler("setcategory", set_category)],
+        states={"FINALIZE_SET_CATEGORY": [CallbackQueryHandler(finalize_set_category)]},
+        fallbacks=[CommandHandler('cancel', cancel_operation)]
+    ))
+    application.add_handler(ConversationHandler(
+        entry_points=[CommandHandler("unsetcategory", unset_category)],
+        states={"FINALIZE_UNSET_CATEGORY": [CallbackQueryHandler(finalize_unset_category)]},
+        fallbacks=[CommandHandler('cancel', cancel_operation)]
+    ))
 
     # Start the bot
     application.run_polling()

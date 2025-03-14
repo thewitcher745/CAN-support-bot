@@ -1,11 +1,13 @@
 # Telegram Message Sender Bot
 
-A simple Telegram bot that allows sending or forwarding messages to specific users by their user ID.
+A Telegram bot that allows users to send or forward messages to any Telegram user using their user ID, as well as categorizing users into different
+lists for (TBD) bulk messaging.
 
 ## Features
 
 - Sends or forwards messages to any Telegram user using their user ID (Provided they have given the bot the necessary permission)
 - Message forwarding is done anonymously, and is accomplished by replying to the message to be forwarded with the `/send` command.
+- Can set and unset categories for different users using their ID, using the /setcategory and /unsetcategory commands.
 - Fallback to sending messages back to the sender.
 - Error handling for invalid user IDs or permission issues
 
@@ -41,26 +43,19 @@ A simple Telegram bot that allows sending or forwarding messages to specific use
 
 2. In Telegram, start a conversation with your bot by sending the `/start` command.
 
-3. To send a message to a specific user, use:
-   ```
-   /send user_id
-   ```
-   Where `user_id` is the Telegram user ID of the recipient.
-
-4. To forward a message, follow the instructions in the previous step, with the only difference being that you need to reply to the desired message 
-with the command.
-
-5. If no user ID is provided, the bot will send the test message back to you.
+3. Use the /help command to view a guide on using the bot.
 
 ## How to Find a User ID
 
 To find a Telegram user ID:
+
 - Forward a message from the target user to [@userinfobot](https://t.me/userinfobot)
 - Use another bot like [@getidsbot](https://t.me/getidsbot)
 
 ## Error Handling
 
 The bot includes error handling for:
+
 - Invalid user IDs
 - Permission errors (when a user has blocked the bot)
 - Other exceptions that might occur during operation

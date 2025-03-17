@@ -1,7 +1,7 @@
 from telegram import error, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext, ConversationHandler
 
-from admin_panel.handlers import cancel_operation
+from admin_panel.basic_handlers import cancel_operation
 from admin_panel.utilities import admin_required, get_category_id_list, get_category_label_by_id, set_category_user_list
 
 

@@ -104,6 +104,7 @@ def admin_required(func):
     # A decorator which makes a function require admin privileges.
     async def wrapper(update, context):
         if not is_user_admin(update.message.from_user.id):
+            context.user_data.clear()
             return ConversationHandler.END
         return await func(update, context)
 

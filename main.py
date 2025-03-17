@@ -22,25 +22,25 @@ def main():
     application = Application.builder().token(TOKEN).read_timeout(30).write_timeout(30).build()
 
     # Commands
-    application.add_handler(CommandHandler('start', start))
-    application.add_handler(CommandHandler('help', show_help))
-    application.add_handler(CommandHandler('send', send_message))
+    application.add_handler(CommandHandler('start', basic_handlers.start))
+    application.add_handler(CommandHandler('help', basic_handlers.show_help))
+    application.add_handler(CommandHandler('send', send_message.send_message))
     application.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('bulksend', bulk_send)],
-        states={'FINALIZE_BULK_SEND': [CallbackQueryHandler(finalize_bulk_send)],
-                'CONFIRM_BULK_SEND': [CommandHandler('yes', confirm_bulk_send)]},
-        fallbacks=[CommandHandler('cancel', cancel_operation)]
+        entry_points=[CommandHandler('bulksend', bulk_send.get_message)],
+        states={'GET_CATEGORY_ID': [CallbackQueryHandler(bulk_send.get_category_id)],
+                'CONFIRM_BULK_SEND': [CallbackQueryHandler(bulk_send.confirm)]},
+        fallbacks=[CommandHandler('cancel', basic_handlers.cancel_operation)]
     ))
     application.add_handler(ConversationHandler(
         entry_points=[CommandHandler('setcategory', set_category.get_user_list)],
         states={'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(set_category.get_category_id)],
                 'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=set_category.confirm)]},
-        fallbacks=[CommandHandler('cancel', cancel_operation)]
+        fallbacks=[CommandHandler('cancel', basic_handlers.cancel_operation)]
     ))
     application.add_handler(ConversationHandler(
         entry_points=[CommandHandler('unsetcategory', unset_category)],
         states={'FINALIZE_UNSET_CATEGORY': [CallbackQueryHandler(finalize_unset_category)]},
-        fallbacks=[CommandHandler('cancel', cancel_operation)]
+        fallbacks=[CommandHandler('cancel', basic_handlers.cancel_operation)]
     ))
 
     # Start the bot

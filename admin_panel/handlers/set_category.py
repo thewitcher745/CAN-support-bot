@@ -6,7 +6,7 @@ from admin_panel.utilities import admin_required, get_category_id_list, get_cate
 
 
 @admin_required
-async def get_user_list_to_set(update: Update, context: CallbackContext):
+async def get_user_list(update: Update, context: CallbackContext):
     """Sets a category's user list to the list of ID's given in a replied message."""
 
     try:
@@ -39,10 +39,12 @@ async def get_user_list_to_set(update: Update, context: CallbackContext):
     except Exception as e:
         await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
 
+    context.user_data.clear()
+
     return ConversationHandler.END
 
 
-async def get_category_id_to_set(update: Update, context: CallbackContext):
+async def get_category_id(update: Update, context: CallbackContext):
     # Take the category_id through the callback query and the target_user_id through the user_data object
     try:
         category_id = update.callback_query.data
@@ -65,11 +67,15 @@ async def get_category_id_to_set(update: Update, context: CallbackContext):
     except error.BadRequest as e:
         await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
 
-    # except Exception as e:
-    #     await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
+    except Exception as e:
+        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
+
+    context.user_data.clear()
+
+    return ConversationHandler.END
 
 
-async def confirm_set_category(update: Update, context: CallbackContext):
+async def confirm(update: Update, context: CallbackContext):
     try:
         if update.callback_query.data == 'CANCEL_OPERATION':
             await update.callback_query.answer()
@@ -97,8 +103,8 @@ async def confirm_set_category(update: Update, context: CallbackContext):
     except error.BadRequest as e:
         await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
 
-    # except Exception as e:
-    #     await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
+    except Exception as e:
+        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
 
     context.user_data.clear()
 

@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 
 from admin_panel.handlers import start, send_message, show_help, cancel_operation, unset_category, \
     finalize_unset_category, bulk_send, finalize_bulk_send, confirm_bulk_send
-from admin_panel.handlers.set_category import get_user_list_to_set, get_category_id_to_set, confirm_set_category
+from admin_panel.handlers import set_category
 
 # Enable logging
 logging.basicConfig(
@@ -32,9 +32,9 @@ def main():
         fallbacks=[CommandHandler('cancel', cancel_operation)]
     ))
     application.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('setcategory', get_user_list_to_set)],
-        states={'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(get_category_id_to_set)],
-                'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=confirm_set_category)]},
+        entry_points=[CommandHandler('setcategory', set_category.get_user_list_to_set)],
+        states={'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(set_category.get_category_id_to_set)],
+                'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=set_category.confirm_set_category)]},
         fallbacks=[CommandHandler('cancel', cancel_operation)]
     ))
     application.add_handler(ConversationHandler(

@@ -49,7 +49,6 @@ async def get_category_id(update: Update, context: CallbackContext):
     try:
         category_id = update.callback_query.data
         context.user_data['category_id_to_set'] = category_id
-        print(f'get_category_id_to_set SETTING CATEGORY WITH ID TO LIST {context.user_data['user_list_to_set']}', category_id)
 
         confirmation_keyboard = InlineKeyboardMarkup(
             [[InlineKeyboardButton('Yes', callback_data='CONFIRM_SET_CATEGORY'), InlineKeyboardButton('Cancel', callback_data='CANCEL_OPERATION')]]
@@ -86,7 +85,6 @@ async def confirm(update: Update, context: CallbackContext):
         # Get the category id from the callback query and the message id from the user_data object
         category_id = context.user_data['category_id_to_set']
         user_list = context.user_data['user_list_to_set']
-        print(f'confirm_set_category SETTING CATEGORY WITH ID TO LIST {context.user_data['user_list_to_set']}', category_id)
 
         # Set the user list for the category
         set_category_user_list(category_id, user_list)

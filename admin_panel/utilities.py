@@ -43,8 +43,6 @@ def add_user_to_category(user_id, category_id):
 
     user_lists[category_id]['users'].append(user_id)
 
-    print(user_lists)
-
     with open('admin_panel/user_lists.json', 'w') as f:
         json.dump(user_lists, f, indent=4)
 
@@ -57,8 +55,6 @@ def remove_user_from_category(user_id, category_id):
         return
 
     user_lists[category_id]['users'].remove(user_id)
-
-    print(user_lists)
 
     with open('admin_panel/user_lists.json', 'w') as f:
         json.dump(user_lists, f, indent=4)

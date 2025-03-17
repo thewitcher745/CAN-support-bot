@@ -32,9 +32,9 @@ def main():
         fallbacks=[CommandHandler('cancel', cancel_operation)]
     ))
     application.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('setcategory', set_category.get_user_list_to_set)],
-        states={'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(set_category.get_category_id_to_set)],
-                'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=set_category.confirm_set_category)]},
+        entry_points=[CommandHandler('setcategory', set_category.get_user_list)],
+        states={'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(set_category.get_category_id)],
+                'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=set_category.confirm)]},
         fallbacks=[CommandHandler('cancel', cancel_operation)]
     ))
     application.add_handler(ConversationHandler(

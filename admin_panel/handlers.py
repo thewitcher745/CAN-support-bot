@@ -2,7 +2,7 @@ from telegram.ext import CallbackContext, ConversationHandler
 from telegram import Update, error, InlineKeyboardMarkup, InlineKeyboardButton
 
 from admin_panel.utilities import get_categories_for_user, get_category_id_list, add_user_to_category, get_category_label_by_id, \
-    remove_user_from_category, is_user_admin
+    remove_user_from_category, is_user_admin, get_users_by_category_id, admin_required
 
 
 # Define command handlers
@@ -40,10 +40,9 @@ async def show_help(update, context):
     await update.message.reply_text(help_message)
 
 
+@admin_required
 async def send_message(update: Update, context: CallbackContext):
     """Send a message to the target user ID."""
-    if not is_user_admin(update.message.from_user.id):
-        return
 
     try:
         # Get the target user ID from the sender
@@ -81,8 +80,6 @@ async def send_message(update: Update, context: CallbackContext):
 
 async def set_category(update: Update, context: CallbackContext):
     """Adds a user to a category."""
-    if not is_user_admin(update.message.from_user.id):
-        return ConversationHandler.END
 
     try:
         # Get the target user ID from the sender
@@ -157,10 +154,9 @@ async def finalize_set_category(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
+@admin_required
 async def unset_category(update: Update, context: CallbackContext):
     """Removes a user from a category."""
-    if not is_user_admin(update.message.from_user.id):
-        return ConversationHandler.END
 
     try:
         # Get the target user ID from the sender

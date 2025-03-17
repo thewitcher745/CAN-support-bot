@@ -73,3 +73,13 @@ def is_user_admin(user_id):
         admins = json.load(f)
 
     return user_id in admins['admins']
+
+
+def admin_required(func):
+    # A decorator which makes a function require admin privileges.
+    async def wrapper(update, context):
+        if not is_user_admin(update.message.from_user.id):
+            return ConversationHandler.END
+        return await func(update, context)
+
+    return wrapper

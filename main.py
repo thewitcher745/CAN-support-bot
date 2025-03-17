@@ -3,7 +3,7 @@ import logging
 from dotenv import dotenv_values
 
 from admin_panel.handlers import start, send_message, show_help, set_category, finalize_set_category, cancel_operation, unset_category, \
-    finalize_unset_category
+    finalize_unset_category, bulk_send, finalize_bulk_send, confirm_bulk_send
 
 # Enable logging
 logging.basicConfig(
@@ -22,16 +22,22 @@ def main():
 
     # Commands
     application.add_handler(CommandHandler('start', start))
-    application.add_handler(CommandHandler('send', send_message))
     application.add_handler(CommandHandler('help', show_help))
+    application.add_handler(CommandHandler('send', send_message))
     application.add_handler(ConversationHandler(
-        entry_points=[CommandHandler("setcategory", set_category)],
-        states={"FINALIZE_SET_CATEGORY": [CallbackQueryHandler(finalize_set_category)]},
+        entry_points=[CommandHandler('bulksend', bulk_send)],
+        states={'FINALIZE_BULK_SEND': [CallbackQueryHandler(finalize_bulk_send)],
+                'CONFIRM_BULK_SEND': [CommandHandler('yes', confirm_bulk_send)]},
         fallbacks=[CommandHandler('cancel', cancel_operation)]
     ))
     application.add_handler(ConversationHandler(
-        entry_points=[CommandHandler("unsetcategory", unset_category)],
-        states={"FINALIZE_UNSET_CATEGORY": [CallbackQueryHandler(finalize_unset_category)]},
+        entry_points=[CommandHandler('setcategory', set_category)],
+        states={'FINALIZE_SET_CATEGORY': [CallbackQueryHandler(finalize_set_category)]},
+        fallbacks=[CommandHandler('cancel', cancel_operation)]
+    ))
+    application.add_handler(ConversationHandler(
+        entry_points=[CommandHandler('unsetcategory', unset_category)],
+        states={'FINALIZE_UNSET_CATEGORY': [CallbackQueryHandler(finalize_unset_category)]},
         fallbacks=[CommandHandler('cancel', cancel_operation)]
     ))
 

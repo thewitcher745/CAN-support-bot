@@ -1,4 +1,6 @@
 import json
+from functools import wraps
+from telegram.ext import ConversationHandler
 
 
 def get_user_lists():
@@ -66,6 +68,11 @@ def get_category_label_by_id(category_id):
     """Get the label of a category given its ID."""
     user_lists = get_user_lists()
     return user_lists[category_id]['label']
+
+
+def get_users_by_category_id(category_id):
+    user_lists = get_user_lists()
+    return user_lists[category_id]['users']
 
 
 def is_user_admin(user_id):

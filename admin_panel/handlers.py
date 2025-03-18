@@ -29,7 +29,7 @@ async def show_help(update, context):
 
 /send <user id>: This command forwards a message to a single user given the user's ID. To select what message to forward, reply to the desired message with this command. If no user ID is given, the message is reflected back to the sender. If no message is replied to, a test message is sent instead. 📱
 
-/setcategory <user id>: This command puts a user with a given user ID into a category. After using this command, select which category you would like to put the user in, or use this command in reply to a message to put the sender into a category. 📈
+/setcategory: This command assigns a list of user ID's to the selected category. After replying to the user list with this command, select which category you would like to add the users to. This overwrites the existing list. 📈
 
 /unsetcategory <user id>: This command removes a user with a given user ID from a category. After using this command, select which category you would like to remove the user from, or use this command in reply to a message to remove the sender from a category. 📈
 
@@ -166,83 +166,6 @@ async def confirm_bulk_send(update: Update, context: CallbackContext):
 
     except Exception as e:
         await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
-
-    return ConversationHandler.END
-
-
-@admin_required
-async def set_category(update: Update, context: CallbackContext):
-    """Adds a user to a category."""
-
-    try:
-        # Get the target user ID from the sender
-        try:
-            target_user_id = update.message.text.split(' ')[1]
-            context.user_data['target_user_id'] = target_user_id
-
-        except IndexError:
-            # If there is an IndexError, this means the user didn't specify a target user ID. Check if the command was used in reply to a message.
-            if update.message.reply_to_message:
-                target_user_id = str(update.message.reply_to_message.api_kwargs['forward_from']['id'])
-                context.user_data['target_user_id'] = target_user_id
-
-            else:
-                # If the command wasn't used in reply to a message, show an error message
-                await update.message.reply_text('⚠️ You have to specify a target user ID for this command.')
-                return
-
-        # Show what lists the user is currently in
-        user_categories = get_categories_for_user(target_user_id)
-        message_text = f'📊 User {target_user_id} is currently in the following categories:\n\n'
-        for category in user_categories:
-            message_text += f'💠 {category}\n'
-
-        await update.message.reply_text(message_text)
-
-        # Create a keyboard of categories that the user is not currently in.
-        categories_with_ids = get_category_id_list()
-        categories_keyboard = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(user_category_label, callback_data=user_category_id)] for user_category_id, user_category_label in
-             categories_with_ids if user_category_label not in user_categories]
-        )
-
-        # Get the category the user should be in
-        await update.message.reply_text('📈 Please select a category to put the user in:', reply_markup=categories_keyboard)
-
-        return "FINALIZE_SET_CATEGORY"
-
-    except error.BadRequest as e:
-        await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
-
-    except Exception as e:
-        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
-
-    return ConversationHandler.END
-
-
-async def finalize_set_category(update: Update, context: CallbackContext):
-    # Take the category_id through the callback query and the target_user_id through the user_data object
-    try:
-        category_id = update.callback_query.data
-        target_user_id = context.user_data['target_user_id']
-
-        # Add the user to the category
-        add_user_to_category(target_user_id, category_id)
-
-        await update.callback_query.answer(f'✅ User {target_user_id} added to category {get_category_label_by_id(category_id)} successfully!')
-
-        # Edit the last message sent by the bot to indicate the success and to not show the keyboard
-        await update.callback_query.edit_message_text(
-            f'✅ User {target_user_id} added to category {get_category_label_by_id(category_id)} successfully!')
-
-    except error.BadRequest as e:
-        await context.bot.send_message(update.effective_chat.id, f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}')
-
-    except Exception as e:
-        await context.bot.send_message(update.effective_chat.id, f'🚨 An error occurred: {str(e)}')
-
-    # Clear the user_data object
-    context.user_data.clear()
 
     return ConversationHandler.END
 

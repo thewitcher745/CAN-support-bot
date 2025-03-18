@@ -75,6 +75,28 @@ def get_users_by_category_id(category_id):
     return user_lists[category_id]['users']
 
 
+def set_category_user_list(category_id, user_list):
+    # Sets the list for a given category
+    user_lists = get_user_lists()
+
+    user_lists[category_id]['users'] = user_list
+
+    with open('admin_panel/user_lists.json', 'w') as f:
+        json.dump(user_lists, f, indent=4)
+
+
+def add_user_list_to_category(category_id, user_list):
+    # Adds a list of users to an existing list, removing duplicates
+    user_lists = get_user_lists()
+
+    for user in user_list:
+        if user not in user_lists[category_id]['users']:
+            user_lists[category_id]['users'].append(user)
+
+    with open('admin_panel/user_lists.json', 'w') as f:
+        json.dump(user_lists, f, indent=4)
+
+
 def is_user_admin(user_id):
     with open('admin_panel/admins.json', 'r') as f:
         admins = json.load(f)

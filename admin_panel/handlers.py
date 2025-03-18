@@ -105,7 +105,8 @@ async def bulk_send(update: Update, context: CallbackContext):
         else:
             # Confirmation message
             await update.message.reply_text(
-                f'⚠️ Error: Bulk sending can only be used in reply to a message. Please make sure you reply to a message with the command and try again.')
+                f'⚠️ Error: Bulk sending can only be used in reply to a message. Please make sure you reply to a message with the command '
+                f'and try again.')
 
             return ConversationHandler.END
 
@@ -128,7 +129,8 @@ async def finalize_bulk_send(update: Update, context: CallbackContext):
 
         # Edit the last message sent by the bot to indicate the success and to not show the keyboard
         await update.callback_query.edit_message_text(
-            f'✅ Category {get_category_label_by_id(category_id)} selected successfully. Are you sure you want to send the message to all {len(get_users_by_category_id(category_id))} users in this category? Type /yes to confirm and /cancel to cancel the operation.')
+            f'✅ Category {get_category_label_by_id(category_id)} selected successfully. Are you sure you want to send the message to all'
+            f' {len(get_users_by_category_id(category_id))} users in this category? Type /yes to confirm and /cancel to cancel the operation.')
 
         return 'CONFIRM_BULK_SEND'
 
@@ -243,7 +245,12 @@ async def finalize_unset_category(update: Update, context: CallbackContext):
 
 
 async def cancel_operation(update: Update, context: CallbackContext):
-    await context.bot.send_message(update.message.chat_id, "❌ Operation canceled by the user.")
+    try:
+        await context.bot.send_message(update.message.chat_id, "❌ Operation canceled by the user.")
+    except:
+        # If the try block fails, that means the update was a callback query. In that case the effective chat id is the chat id of the user.
+        await context.bot.send_message(update.callback_query.from_user.id, "❌ Operation canceled by the user.")
+
     # Clear the user_data object
     context.user_data.clear()
     return ConversationHandler.END

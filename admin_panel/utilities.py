@@ -93,6 +93,18 @@ def add_user_list_to_category(category_id, user_list):
         json.dump(user_lists, f, indent=4)
 
 
+def remove_user_list_from_category(category_id, user_list):
+    # Removes a list of users from an existing list
+    user_lists = get_user_lists()
+
+    for user in user_list:
+        if user in user_lists[category_id]['users']:
+            user_lists[category_id]['users'].remove(user)
+
+    with open('admin_panel/user_lists.json', 'w') as f:
+        json.dump(user_lists, f, indent=4)
+
+
 def is_user_admin(user_id):
     with open('admin_panel/admins.json', 'r') as f:
         admins = json.load(f)

@@ -3,7 +3,7 @@ import logging
 from dotenv import dotenv_values
 
 from admin_panel import basic_handlers
-from admin_panel.handler_modules import set_category, add_to_category, bulk_send, send_message
+from admin_panel.handler_modules import set_category, add_to_category, bulk_send, send_message, remove_from_category
 
 # Enable logging
 logging.basicConfig(
@@ -49,6 +49,13 @@ def main():
         fallbacks=[CommandHandler('cancel', basic_handlers.cancel_operation)]
     ))
 
+    # Removing from category lists
+    application.add_handler(ConversationHandler(
+        entry_points=[CommandHandler('removefromcategory', remove_from_category.get_user_list)],
+        states={'GET_CATEGORY_ID_TO_REMOVE': [CallbackQueryHandler(remove_from_category.get_category_id)],
+                'CONFIRM_REMOVE_CATEGORY': [CallbackQueryHandler(callback=remove_from_category.confirm)]},
+        fallbacks=[CommandHandler('cancel', basic_handlers.cancel_operation)]
+    ))
     # Start the bot
     application.run_polling()
 

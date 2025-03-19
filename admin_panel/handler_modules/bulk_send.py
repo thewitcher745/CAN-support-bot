@@ -3,15 +3,16 @@ Sends a message to all users in a category. The message can be selected by reply
 after selecting the Bulk Send option from the main menu using a user update (Callback query).
 """
 
-from telegram import error, Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import error, Update
 from telegram.ext import CallbackContext, ConversationHandler
 
 from admin_panel import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
-from admin_panel.utilities import admin_required, get_category_id_list, get_category_label_by_id, get_users_by_category_id
+from admin_panel.utilities import admin_required, get_category_label_by_id, get_users_by_category_id, handle_telegram_errors
 
 
 @admin_required
+@handle_telegram_errors
 async def get_message_from_reply(update: Update, context: CallbackContext):
     """
     Get the message from the reply.
@@ -50,6 +51,8 @@ async def get_message_from_reply(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
+@admin_required
+@handle_telegram_errors
 async def get_message_from_user_update(update: Update, context: CallbackContext):
     """
     Get the message from a message sent by the user.
@@ -73,6 +76,7 @@ async def get_message_from_user_update(update: Update, context: CallbackContext)
     return ConversationHandler.END
 
 
+@handle_telegram_errors
 async def set_message_id(update: Update, context: CallbackContext):
     # Sets the message ID and the from_chat ID from the message sent by the user
     context.user_data['message_id'] = update.message.message_id
@@ -84,6 +88,7 @@ async def set_message_id(update: Update, context: CallbackContext):
     return 'GET_CATEGORY_ID'
 
 
+@handle_telegram_errors
 async def get_category_id(update: Update, context: CallbackContext):
     try:
         if update.callback_query.data == 'CANCEL':
@@ -117,6 +122,7 @@ async def get_category_id(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
+@handle_telegram_errors
 async def confirm(update: Update, context: CallbackContext):
     try:
         if not update.callback_query.data == 'CONFIRM':

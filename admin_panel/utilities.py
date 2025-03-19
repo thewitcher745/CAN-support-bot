@@ -1,6 +1,7 @@
 import json
 from functools import wraps
-from telegram.ext import ConversationHandler
+from telegram import error, Update
+from telegram.ext import ConversationHandler, CallbackContext
 
 
 def get_user_lists():
@@ -142,3 +143,29 @@ def get_update_type(update):
         return 'MESSAGE'
     except:
         return 'CALLBACK_QUERY'
+
+
+def handle_telegram_errors(func):
+    """
+    Decorator that handles common Telegram errors and cleans up user_data.
+    Wraps async functions that take Update and CallbackContext as parameters.
+    """
+    @wraps(func)
+    async def wrapper(update: Update, context: CallbackContext, *args, **kwargs):
+        try:
+            return await func(update, context, *args, **kwargs)
+        except error.BadRequest as e:
+            await context.bot.send_message(
+                update.effective_chat.id,
+                f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}'
+            )
+        except Exception as e:
+            await context.bot.send_message(
+                update.effective_chat.id,
+                f'🚨 An error occurred: {str(e)}'
+            )
+
+        context.user_data.clear()
+        return ConversationHandler.END
+
+    return wrapper

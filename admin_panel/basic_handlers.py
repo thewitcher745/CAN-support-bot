@@ -1,11 +1,12 @@
 from telegram.ext import CallbackContext, ConversationHandler
-from telegram import Update, error, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import Update
 
 from admin_panel import fixed_keyboards
-from admin_panel.utilities import add_user_to_category, is_user_admin, get_chat_id, get_update_type
+from admin_panel.utilities import add_user_to_category, is_user_admin, get_chat_id, get_update_type, handle_telegram_errors
 
 
 # Define command handlers
+@handle_telegram_errors
 async def start(update: Update, context: CallbackContext):
     """Send a welcome message when /start is used if the user isn't an admin, otherwise show a welcome message for the admin panel. If the user isn't
     an admin, add them to the INTERESTED category."""
@@ -44,6 +45,7 @@ async def start(update: Update, context: CallbackContext):
                 reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN)
 
 
+@handle_telegram_errors
 async def show_help(update: Update, context: CallbackContext):
     """Show different help messages for admins and regular users."""
 
@@ -74,6 +76,7 @@ async def show_help(update: Update, context: CallbackContext):
         await update.callback_query.edit_message_text(help_message, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
 
 
+@handle_telegram_errors
 async def cancel_operation(update: Update, context: CallbackContext):
     try:
         await context.bot.send_message(update.message.chat_id, "❌ Operation canceled by the user.", reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)

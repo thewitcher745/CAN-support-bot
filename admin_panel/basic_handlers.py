@@ -1,28 +1,56 @@
 from telegram.ext import CallbackContext, ConversationHandler
 from telegram import Update, error, InlineKeyboardMarkup, InlineKeyboardButton
 
-from admin_panel.utilities import add_user_to_category, is_user_admin
+from admin_panel import fixed_keyboards
+from admin_panel.utilities import add_user_to_category, is_user_admin, get_chat_id, get_update_type
 
 
 # Define command handlers
-async def start(update, context):
+async def start(update: Update, context: CallbackContext):
     """Send a welcome message when /start is used if the user isn't an admin, otherwise show a welcome message for the admin panel. If the user isn't
     an admin, add them to the INTERESTED category."""
     # Show a welcome message to normal users
-    if not is_user_admin(update.message.from_user.id):
-        await update.message.reply_text(
-            f"🤖 Hello, {update.message.from_user.first_name}! I'm a bot that helps you contact CAN support. Use /help to see what I can do.")
-        add_user_to_category(str(update.message.from_user.id), '0')
+
+    chat_id = get_chat_id(update)
+    update_type = get_update_type(update)
+
+    if not is_user_admin(chat_id):
+        if update_type == 'MESSAGE':
+            await update.message.reply_text(
+                f'🤖 Hello, {update.message.from_user.first_name}! I\'m a bot that helps you contact CAN support. Use /help to see what I can do.')
+
+        else:
+            await update.callback_query.answer()
+
+            await update.callback_query.edit_message_text(
+                f'🤖 Welcome back! I\'m a bot that helps you contact CAN support. Use /help to see what I can do.')
+
+        add_user_to_category(str(chat_id), '0')
 
     # Show admin panel welcome message to admins.
     else:
-        await update.message.reply_text(
-            f"🔰 Welcome to the admin panel, {update.message.from_user.first_name}! Use /help to see what I can do.")
+        if update_type == 'MESSAGE':
+            await update.message.reply_text(
+                f'🔰 Welcome to the admin panel, {update.message.from_user.first_name}! Use /help to see what I can do, or use '
+                f'the "Show help" button below.',
+                reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN)
+
+        else:
+            await update.callback_query.answer()
+
+            await update.callback_query.edit_message_text(
+                f'🔰 Welcome back to the admin panel! Use /help to see what I can do, or use '
+                f'the "Show help" button below.',
+                reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN)
 
 
-async def show_help(update, context):
+async def show_help(update: Update, context: CallbackContext):
     """Show different help messages for admins and regular users."""
-    if is_user_admin(update.message.from_user.id):
+
+    chat_id = get_chat_id(update)
+    update_type = get_update_type(update)
+
+    if is_user_admin(chat_id):
         help_message = """
 📝 This bot is used to contact users. Currently it supports the following commands and functionalities:
 
@@ -38,15 +66,20 @@ async def show_help(update, context):
         help_message = """
 📝 This bot is used to contact users. Select your desired option after using the /start command."""
 
-    await update.message.reply_text(help_message)
+    if update_type == 'MESSAGE':
+        await update.message.reply_text(help_message, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
+    else:
+        await update.callback_query.answer()
+
+        await update.callback_query.edit_message_text(help_message, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
 
 
 async def cancel_operation(update: Update, context: CallbackContext):
     try:
-        await context.bot.send_message(update.message.chat_id, "❌ Operation canceled by the user.")
+        await context.bot.send_message(update.message.chat_id, "❌ Operation canceled by the user.", reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
     except:
         # If the try block fails, that means the update was a callback query. In that case the effective chat id is the chat id of the user.
-        await update.callback_query.edit_message_text("❌ Operation canceled by the user.")
+        await update.callback_query.edit_message_text("❌ Operation canceled by the user.", reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
 
     # Clear the user_data object
     context.user_data.clear()

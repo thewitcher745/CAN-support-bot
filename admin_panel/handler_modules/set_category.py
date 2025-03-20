@@ -9,21 +9,30 @@ from admin_panel.utilities import admin_required, get_category_label_by_id, set_
 @admin_required
 @handle_telegram_errors
 async def get_user_list_from_reply(update: Update, context: CallbackContext):
-    """Sets a category's user list to the list of ID's given in a replied message."""
+    """
+    Handler for getting a list of user IDs from a replied message to set as a category's user list.
 
+    Args:
+        update (Update): The Telegram update object
+        context (CallbackContext): The callback context object
+
+    Returns:
+        str: The next conversation state 'GET_CATEGORY_ID_TO_SET'
+        None: If no message was replied to
+    """
     if not update.message.reply_to_message:
-        # If the command wasn't used in reply to a message, show an error message
         await update.message.reply_text('⚠️ You have to use this command in reply to a list of user ID\'s.')
         return
 
-    # Parse the list of user ID's in the replied message.
+    # Parse space-separated user IDs from the replied message
     user_ids = update.message.reply_to_message.text.split()
-    user_ids = [user_id for user_id in user_ids]
-
     context.user_data['user_list_to_set'] = user_ids
 
-    # Get the category the user should be in
-    await update.message.reply_text('📈 Please select a category to set the user list for:', reply_markup=fixed_keyboards.CATEGORIES)
+    # Prompt user to select category
+    await update.message.reply_text(
+        '📈 Please select a category to set the user list for:', 
+        reply_markup=fixed_keyboards.CATEGORIES
+    )
 
     return 'GET_CATEGORY_ID_TO_SET'
 
@@ -32,7 +41,14 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
 @handle_telegram_errors
 async def get_user_list_from_user_update(update: Update, context: CallbackContext):
     """
-    Get the user list from a message sent by the user after clicking the menu button.
+    Handler for getting a list of user IDs directly from user input after clicking menu button.
+
+    Args:
+        update (Update): The Telegram update object
+        context (CallbackContext): The callback context object
+
+    Returns:
+        str: The next conversation state 'SET_USER_LIST'
     """
     await update.callback_query.edit_message_text(
         '📋 Send the list of user IDs you want to set for the category.',
@@ -43,31 +59,53 @@ async def get_user_list_from_user_update(update: Update, context: CallbackContex
 
 @handle_telegram_errors
 async def set_user_list(update: Update, context: CallbackContext):
-    """Process the user list message and show category selection."""
+    """
+    Handler for processing user-provided list of IDs and prompting for category selection.
+
+    Args:
+        update (Update): The Telegram update object
+        context (CallbackContext): The callback context object
+
+    Returns:
+        str: The next conversation state 'GET_CATEGORY_ID_TO_SET'
+    """
+    # Parse space-separated user IDs from message
     user_ids = update.message.text.split()
-    user_ids = [user_id for user_id in user_ids]
     context.user_data['user_list_to_set'] = user_ids
 
+    # Prompt user to select category
     await update.message.reply_text(
         '📈 Please select a category to set the user list for:',
         reply_markup=fixed_keyboards.CATEGORIES
     )
+    
     return 'GET_CATEGORY_ID_TO_SET'
 
 
 @admin_required
 @handle_telegram_errors
 async def get_category_id(update: Update, context: CallbackContext):
-    # Take the category_id through the callback query and the target_user_id through the user_data object
+    """
+    Handler for processing the selected category and asking for confirmation.
+
+    Args:
+        update (Update): The Telegram update object
+        context (CallbackContext): The callback context object
+
+    Returns:
+        str: The next conversation state 'CONFIRM_SET_CATEGORY'
+    """
+    # Get the category_id from callback data
     category_id = update.callback_query.data
     context.user_data['category_id_to_set'] = category_id
 
     await update.callback_query.answer()
 
-    # Edit the last message sent by the bot to indicate the success and to not show the keyboard
+    # Show confirmation prompt with category name
     await update.callback_query.edit_message_text(
         f'❓ Are you sure you want to set the user list for category {get_category_label_by_id(category_id)}?',
-        reply_markup=fixed_keyboards.CONFIRMATION)
+        reply_markup=fixed_keyboards.CONFIRMATION
+    )
 
     return 'CONFIRM_SET_CATEGORY'
 
@@ -75,12 +113,24 @@ async def get_category_id(update: Update, context: CallbackContext):
 @admin_required
 @handle_telegram_errors
 async def confirm(update: Update, context: CallbackContext):
+    """
+    Handler for processing confirmation and setting the category's user list.
+
+    Args:
+        update (Update): The Telegram update object
+        context (CallbackContext): The callback context object
+
+    Returns:
+        int: ConversationHandler.END on success
+        Any: Result of cancel_operation() if not confirmed
+    """
+    # Handle cancellation
     if not update.callback_query.data == 'CONFIRM':
         await update.callback_query.answer()
         context.user_data.clear()
         return await cancel_operation(update, context)
 
-    # Get the category id from the callback query and the message id from the user_data object
+    # Get stored category ID and user list
     category_id = context.user_data['category_id_to_set']
     user_list = context.user_data['user_list_to_set']
 
@@ -89,10 +139,13 @@ async def confirm(update: Update, context: CallbackContext):
 
     await update.callback_query.answer()
 
-    # Edit the last message sent by the bot to indicate the success and to not show the keyboard
-    await update.callback_query.edit_message_text(f'✅ Category {get_category_label_by_id(category_id)} set successfully!',
-                                                  reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
+    # Show success message
+    await update.callback_query.edit_message_text(
+        f'✅ Category {get_category_label_by_id(category_id)} set successfully!',
+        reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
+    )
 
+    # Clean up user data
     context.user_data.clear()
 
     return ConversationHandler.END

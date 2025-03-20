@@ -2,21 +2,23 @@ from telegram.ext import CallbackContext, ConversationHandler
 from telegram import Update
 
 from admin_panel import fixed_keyboards
-from admin_panel.utilities import add_user_to_category, is_user_admin, get_chat_id, get_update_type, handle_telegram_errors
+from admin_panel.utilities import add_user_to_category, is_user_admin, get_chat_id, get_update_type, handle_telegram_errors, register_user_start
 
 
-# Define command handlers
 @handle_telegram_errors
 async def start(update: Update, context: CallbackContext):
-    """Send a welcome message when /start is used if the user isn't an admin, otherwise show a welcome message for the admin panel. If the user isn't
-    an admin, add them to the INTERESTED category."""
-    # Show a welcome message to normal users
+    """
+    Send a welcome message when /start is used if the user isn't an admin, otherwise show a welcome message for the admin panel. If the user isn't
+    an admin, add them to the INTERESTED category. Also, if the /start command is used, add the user to the user history JSON.
+    """
 
+    # Show a welcome message to normal users
     chat_id = get_chat_id(update)
     update_type = get_update_type(update)
 
     if not is_user_admin(chat_id):
         if update_type == 'MESSAGE':
+            register_user_start(update.message)
             await update.message.reply_text(
                 f'🤖 Hello, {update.message.from_user.first_name}! I\'m a bot that helps you contact CAN support. Use /help to see what I can do.')
 

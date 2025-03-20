@@ -2,6 +2,55 @@ import json
 from functools import wraps
 from telegram import error, Update
 from telegram.ext import ConversationHandler, CallbackContext
+import os
+
+
+def register_user_start(start_message):
+    """
+    Register a user's name, language, ID, and start time (current date and time) in a history json file. Create the file if it doesn't exist. Don't add the user if their
+    ID is already in the history file.
+    """
+    history_file = 'admin_panel/data/user_history.json'
+
+    # Create the history file if it doesn't exist
+    if not os.path.exists(history_file):
+        with open(history_file, 'w', encoding='utf-8') as f:
+            json.dump([], f, indent=4, ensure_ascii=False)
+
+    # Get the user's first name, last name, language, ID, and username
+    user_first_name = start_message.from_user.first_name
+    user_last_name = start_message.from_user.last_name
+    user_language = start_message.from_user.language_code
+    user_id = start_message.from_user.id
+    user_username = start_message.from_user.username
+
+    # Get the date the /start command was used
+    start_date = start_message.date.isoformat()
+
+    # Create a new user entry
+    new_user = {
+        'user_id': user_id,
+        'first_name': user_first_name if user_first_name else "",
+        'last_name': user_last_name if user_last_name else "",
+        'language': user_language,
+        'username': user_username if user_username else "",
+        'start_time': start_date
+    }
+
+    # Load existing history if file exists
+    if os.path.exists(history_file):
+        with open(history_file, 'r', encoding='utf-8') as f:
+            history = json.load(f)
+    else:
+        history = []
+
+    # Add new user if not already present
+    if not any(entry['user_id'] == user_id for entry in history):
+        history.append(new_user)
+
+    # Write updated history back to file
+    with open(history_file, 'w', encoding='utf-8') as f:
+        json.dump(history, f, indent=4, ensure_ascii=False)
 
 
 def get_user_lists():

@@ -29,7 +29,7 @@ def register_user_start(start_message):
 
     # Create a new user entry
     new_user = {
-        'user_id': user_id,
+        'user_id': str(user_id),
         'first_name': user_first_name if user_first_name else "",
         'last_name': user_last_name if user_last_name else "",
         'language': user_language,
@@ -45,7 +45,7 @@ def register_user_start(start_message):
         history = []
 
     # Add new user if not already present
-    if not any(entry['user_id'] == user_id for entry in history):
+    if not any(entry['user_id'] == str(user_id) for entry in history):
         history.append(new_user)
 
     # Write updated history back to file

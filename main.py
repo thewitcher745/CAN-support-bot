@@ -3,7 +3,7 @@ import logging
 from dotenv import dotenv_values
 
 from admin_panel import basic_handlers
-from admin_panel.handler_modules import set_category, add_to_category, bulk_send, send_message, remove_from_category
+from admin_panel.handler_modules import set_category, add_to_category, bulk_send, send_message, remove_from_category, export_history
 
 # Enable logging
 logging.basicConfig(
@@ -79,7 +79,7 @@ def main():
         },
         fallbacks=[
             CommandHandler('cancel', basic_handlers.cancel_operation),
-            CallbackQueryHandler( 
+            CallbackQueryHandler(
                 basic_handlers.cancel_operation, pattern='CANCEL')
         ]
     ))
@@ -103,6 +103,10 @@ def main():
                 basic_handlers.cancel_operation, pattern='CANCEL')
         ]
     ))
+
+    # Export history
+    application.add_handler(CallbackQueryHandler(
+        callback=export_history.export_history, pattern='EXPORT_HISTORY'))
 
     # Start the bot
     application.run_polling()

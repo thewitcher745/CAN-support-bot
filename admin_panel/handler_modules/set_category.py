@@ -1,7 +1,14 @@
-from telegram import Update, error
+from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
+from utils.strings import (
+    CATEGORY_ERROR_REPLY,
+    CATEGORY_SELECT_PROMPT,
+    CATEGORY_USER_LIST_PROMPT,
+    CATEGORY_CONFIRM_SET,
+    CATEGORY_SET_SUCCESS
+)
 from admin_panel.basic_handlers import cancel_operation
 from utils.utilities import admin_required, get_category_label_by_id, set_category_user_list, handle_telegram_errors
 
@@ -21,7 +28,7 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
         None: If no message was replied to
     """
     if not update.message.reply_to_message:
-        await update.message.reply_text('⚠️ You have to use this command in reply to a list of user ID\'s.')
+        await update.message.reply_text(CATEGORY_ERROR_REPLY)
         return
 
     # Parse space-separated user IDs from the replied message
@@ -29,10 +36,7 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
     context.user_data['user_list_to_set'] = user_ids
 
     # Prompt user to select category
-    await update.message.reply_text(
-        '📈 Please select a category to set the user list for:',
-        reply_markup=fixed_keyboards.CATEGORIES
-    )
+    await update.message.reply_text(CATEGORY_SELECT_PROMPT, reply_markup=fixed_keyboards.CATEGORIES)
 
     return 'GET_CATEGORY_ID_TO_SET'
 
@@ -51,8 +55,7 @@ async def get_user_list_from_user_update(update: Update, context: CallbackContex
         str: The next conversation state 'SET_USER_LIST'
     """
     await update.callback_query.edit_message_text(
-        '📋 Send the list of user IDs you want to set for the category.',
-        reply_markup=fixed_keyboards.CANCEL_OPERATION
+        CATEGORY_USER_LIST_PROMPT, reply_markup=fixed_keyboards.CANCEL_OPERATION
     )
     return 'SET_USER_LIST'
 
@@ -74,10 +77,7 @@ async def set_user_list(update: Update, context: CallbackContext):
     context.user_data['user_list_to_set'] = user_ids
 
     # Prompt user to select category
-    await update.message.reply_text(
-        '📈 Please select a category to set the user list for:',
-        reply_markup=fixed_keyboards.CATEGORIES
-    )
+    await update.message.reply_text(CATEGORY_SELECT_PROMPT, reply_markup=fixed_keyboards.CATEGORIES)
 
     return 'GET_CATEGORY_ID_TO_SET'
 
@@ -103,7 +103,8 @@ async def get_category_id(update: Update, context: CallbackContext):
 
     # Show confirmation prompt with category name
     await update.callback_query.edit_message_text(
-        f'❓ Are you sure you want to set the user list for category {get_category_label_by_id(category_id)}?',
+        CATEGORY_CONFIRM_SET.format(
+            category=get_category_label_by_id(category_id)),
         reply_markup=fixed_keyboards.CONFIRMATION
     )
 
@@ -141,7 +142,8 @@ async def confirm(update: Update, context: CallbackContext):
 
     # Show success message
     await update.callback_query.edit_message_text(
-        f'✅ Category {get_category_label_by_id(category_id)} set successfully!',
+        CATEGORY_SET_SUCCESS.format(
+            category=get_category_label_by_id(category_id)),
         reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
     )
 
@@ -149,6 +151,7 @@ async def confirm(update: Update, context: CallbackContext):
     context.user_data.clear()
 
     return ConversationHandler.END
+
 
 set_category_handler = ConversationHandler(
     entry_points=[

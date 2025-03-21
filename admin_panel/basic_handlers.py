@@ -2,6 +2,15 @@ from telegram.ext import CallbackContext, ConversationHandler
 from telegram import Update
 
 from utils import fixed_keyboards
+from utils.strings import (
+    ADMIN_WELCOME,
+    ADMIN_WELCOME_BACK,
+    USER_WELCOME,
+    USER_WELCOME_BACK,
+    ADMIN_HELP,
+    USER_HELP,
+    OPERATION_CANCELED
+)
 from utils.utilities import (
     add_user_to_category,
     is_user_admin,
@@ -16,12 +25,12 @@ from utils.utilities import (
 async def start(update: Update, context: CallbackContext):
     """
     Handle the /start command for both regular users and admins.
-    
+
     For regular users:
     - Sends a welcome message
     - Registers their start in user history
     - Adds them to the INTERESTED category
-    
+
     For admins:
     - Shows admin panel welcome message with main menu
 
@@ -43,15 +52,15 @@ async def start(update: Update, context: CallbackContext):
             register_user_start(update.message)
 
             await update.message.reply_text(
-                f'🤖 Hello, {update.message.from_user.first_name}! '
-                'I\'m a bot that helps you contact CAN support. Use /help to see what I can do.'
+                USER_WELCOME.format(name=update.message.from_user.first_name),
+                reply_markup=fixed_keyboards.USER_PANEL_MAIN
             )
         else:
             # Handle callback query for returning users
             await update.callback_query.answer()
             await update.callback_query.edit_message_text(
-                '🤖 Welcome back! I\'m a bot that helps you contact CAN support. '
-                'Use /help to see what I can do.'
+                USER_WELCOME_BACK,
+                reply_markup=fixed_keyboards.USER_PANEL_MAIN
             )
 
         # Add user to interested category
@@ -61,17 +70,13 @@ async def start(update: Update, context: CallbackContext):
     else:
         if update_type == 'MESSAGE':
             await update.message.reply_text(
-                f'🔰 Welcome to the admin panel, {update.message.from_user.first_name}! '
-                'Use /help to see what I can do, or use the "Show help" button below.',
+                ADMIN_WELCOME.format(name=update.message.from_user.first_name),
                 reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN
             )
         else:
             await update.callback_query.answer()
-            await update.callback_query.edit_message_text(
-                '🔰 Welcome back to the admin panel! Use /help to see what I can do, '
-                'or use the "Show help" button below.',
-                reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN
-            )
+            await update.callback_query.edit_message_text(ADMIN_WELCOME_BACK, reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN
+                                                          )
 
 
 @handle_telegram_errors
@@ -93,37 +98,15 @@ async def show_help(update: Update, context: CallbackContext):
     chat_id = get_chat_id(update)
     update_type = get_update_type(update)
 
-    # Define help messages for different user roles
-    if is_user_admin(chat_id):
-        help_message = """
-📝 This bot is used to contact users. Currently it supports the following commands and functionalities:
+    help_message = ADMIN_HELP if is_user_admin(chat_id) else USER_HELP
 
-/send <user id>: This command forwards a message to a single user given the user's ID. To select what message to forward, reply to the desired message with this command. If no user ID is given, the message is reflected back to the sender. If no message is replied to, a test message is sent instead. 📱
-
-/setcategory: This command assigns a list of user ID's to the selected category. After replying to the user list with this command, select which category you would like to add the users to. This overwrites the existing list. 📈
-
-/addtocategory: This command adds a list of ID's to the selected category. After replying to the user list with this command, select which category you would like to add the users to. 📈
-
-/removefromcategory: This command removes a list of ID's from the selected category. After replying to the user list with this command, select which category you would like to remove the users from. 📈
-
-/bulksend <user id>: This command sends a message to all users in a category, selected in a dialog after the command is used. 📈
-"""
-    else:
-        help_message = """
-📝 This bot is used to contact users. Select your desired option after using the /start command."""
-
-    # Send help message based on update type
     if update_type == 'MESSAGE':
-        await update.message.reply_text(
-            help_message,
-            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
-        )
+        await update.message.reply_text(help_message,
+                                        reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
     else:
         await update.callback_query.answer()
-        await update.callback_query.edit_message_text(
-            help_message,
-            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
-        )
+        await update.callback_query.edit_message_text(help_message,
+                                                      reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
 
 
 @handle_telegram_errors
@@ -143,17 +126,12 @@ async def cancel_operation(update: Update, context: CallbackContext):
     """
     try:
         # Try handling as message update
-        await context.bot.send_message(
-            update.message.chat_id,
-            "❌ Operation canceled by the user.",
-            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
-        )
+        await context.bot.send_message(update.message.chat_id, OPERATION_CANCELED,
+                                       reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
     except:
         # Handle as callback query if message update fails
-        await update.callback_query.edit_message_text(
-            "❌ Operation canceled by the user.",
-            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
-        )
+        await update.callback_query.edit_message_text(OPERATION_CANCELED,
+                                                      reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
 
     # Clear user data and end conversation
     context.user_data.clear()

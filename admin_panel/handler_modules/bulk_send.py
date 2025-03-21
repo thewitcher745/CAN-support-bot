@@ -11,6 +11,14 @@ from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
+from utils.strings import (
+    BULK_SEND_MESSAGE_SELECTED,
+    BULK_SEND_ERROR_REPLY,
+    BULK_SEND_PROMPT,
+    BULK_SEND_CATEGORY_SELECTED,
+    BULK_SEND_ERROR_USER,
+    BULK_SEND_SUCCESS
+)
 from admin_panel.basic_handlers import cancel_operation
 from utils.utilities import admin_required, get_category_label_by_id, get_users_by_category_id, handle_telegram_errors
 
@@ -34,10 +42,7 @@ async def get_message_from_reply(update: Update, context: CallbackContext):
 
     # If the command is used in reply to a previous message, that message will be forwarded to the recipients without the sender data.
     if update.message.reply_to_message:
-        await update.message.reply_text(
-            f'📧 Message selected for bulk sending. Now select the category you wish the message to be sent to.',
-            reply_markup=fixed_keyboards.CATEGORIES
-        )
+        await update.message.reply_text(BULK_SEND_MESSAGE_SELECTED, reply_markup=fixed_keyboards.CATEGORIES)
 
         context.user_data['message_id'] = update.message.reply_to_message.message_id
         context.user_data['from_chat_id'] = update.effective_chat.id
@@ -46,10 +51,7 @@ async def get_message_from_reply(update: Update, context: CallbackContext):
 
     else:
         # Confirmation message
-        await update.message.reply_text(
-            f'⚠️ Error: The command /bulksend can only be used in reply to a message. Please make sure you reply to a message with the command '
-            f'and try again.'
-        )
+        await update.message.reply_text(BULK_SEND_ERROR_REPLY)
 
         context.user_data.clear()
 
@@ -72,10 +74,7 @@ async def get_message_from_user_update(update: Update, context: CallbackContext)
         str: The next conversation state 'SET_MESSAGE_ID' if successful
         int: ConversationHandler.END if an error occurs
     """
-    await update.callback_query.edit_message_text(
-        '📨 Send the message you wish to be sent to users in a category.',
-        reply_markup=fixed_keyboards.CANCEL_OPERATION
-    )
+    await update.callback_query.edit_message_text(BULK_SEND_PROMPT, reply_markup=fixed_keyboards.CANCEL_OPERATION)
     return 'SET_MESSAGE_ID'
 
 
@@ -97,10 +96,7 @@ async def set_message_id(update: Update, context: CallbackContext):
     context.user_data['message_id'] = update.message.message_id
     context.user_data['from_chat_id'] = update.effective_chat.id
 
-    await update.message.reply_text(
-        f'📧 Message selected for bulk sending. Now select the category you wish the message to be sent to.',
-        reply_markup=fixed_keyboards.CATEGORIES
-    )
+    await update.message.reply_text(BULK_SEND_MESSAGE_SELECTED, reply_markup=fixed_keyboards.CATEGORIES)
 
     return 'GET_CATEGORY_ID'
 
@@ -138,8 +134,7 @@ async def get_category_id(update: Update, context: CallbackContext):
 
     # Prompt for confirmation before sending to multiple users
     await update.callback_query.edit_message_text(
-        f'❓ Category {category_label} selected successfully. Are you sure you want to send the provided message to all'
-        f' {user_count} users in this category?',
+        BULK_SEND_CATEGORY_SELECTED.format(category=category_label, count=user_count),
         reply_markup=fixed_keyboards.CONFIRMATION
     )
 
@@ -189,14 +184,14 @@ async def confirm(update: Update, context: CallbackContext):
             # Log the error but continue with other users
             await context.bot.send_message(
                 update.effective_chat.id,
-                f'⚠️ Error: Message sending failed for user ID {chat_id}: {str(e)}'
+                BULK_SEND_ERROR_USER.format(user_id=chat_id, error=str(e))
             )
 
     await update.callback_query.answer()
 
     # Show success message and return to main menu
     await update.callback_query.edit_message_text(
-        f'✅ Message sent to all users in category {category_label} successfully!',
+        BULK_SEND_SUCCESS.format(category=category_label),
         reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
     )
 

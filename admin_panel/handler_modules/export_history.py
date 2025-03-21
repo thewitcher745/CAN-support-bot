@@ -4,10 +4,17 @@ import os
 from telegram import Update
 from telegram.ext import CallbackContext, CallbackQueryHandler
 
-from utils.fixed_keyboards import RETURN_TO_MAIN_MENU
-from utils.utilities import get_chat_id, get_categories_for_user
+from utils import fixed_keyboards
+from utils.strings import (
+    EXPORT_HISTORY_START,
+    EXPORT_HISTORY_SUCCESS,
+    EXPORT_HISTORY_ERROR
+)
+from utils.utilities import admin_required, get_categories_for_user, get_chat_id, handle_telegram_errors
 
 
+@admin_required
+@handle_telegram_errors
 async def export_history(update: Update, context: CallbackContext):
     """
     Handler to export user history to CSV and send it to the admin.
@@ -16,14 +23,11 @@ async def export_history(update: Update, context: CallbackContext):
     and their associated categories, then sends the CSV file to the admin via Telegram.
 
     Args:
-        update (Update): The incoming update from Telegram
-        context (CallbackContext): The callback context
+        update (Update): The Telegram update object
+        context (CallbackContext): The callback context object
 
     Returns:
         None
-
-    Raises:
-        Exception: If there's an error during file operations or sending messages
     """
     try:
         # Get chat ID for the current admin user
@@ -51,8 +55,7 @@ async def export_history(update: Update, context: CallbackContext):
             for entry in user_history:
                 # Get categories for current user
                 categories_containing_user = get_categories_for_user(
-                    entry.get('user_id', '')
-                )
+                    entry.get('user_id', ''))
 
                 # Write user data to CSV
                 writer.writerow({
@@ -67,18 +70,14 @@ async def export_history(update: Update, context: CallbackContext):
 
         # Send CSV file to admin
         with open(csv_path, 'rb') as file:
-            await context.bot.send_document(
-                chat_id=chat_id,
-                document=file,
-                filename='user_history.csv'
-            )
+            await context.bot.send_document(chat_id=chat_id,
+                                            document=file,
+                                            filename='user_history.csv')
 
         # Send success confirmation
-        await context.bot.send_message(
-            chat_id=chat_id,
-            text='✅ User history has been successfully exported to CSV!',
-            reply_markup=RETURN_TO_MAIN_MENU
-        )
+        await context.bot.send_message(chat_id=chat_id,
+                                       text='✅ User history has been successfully exported to CSV!',
+                                       reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
 
         # Cleanup temporary CSV file
         os.remove(csv_path)
@@ -88,10 +87,8 @@ async def export_history(update: Update, context: CallbackContext):
 
     except Exception as e:
         # Handle any errors during export process
-        await update.callback_query.message.reply_text(
-            f"Error exporting user history: {str(e)}",
-            reply_markup=RETURN_TO_MAIN_MENU
-        )
+        await update.callback_query.message.reply_text(EXPORT_HISTORY_ERROR.format(error=str(e)),
+                                                       reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU)
         await update.callback_query.answer()
 
 export_history_handler = CallbackQueryHandler(

@@ -2,8 +2,15 @@ from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
+from utils.strings import (
+    CATEGORY_ERROR_REPLY,
+    REMOVE_FROM_CATEGORY_SELECT_PROMPT,
+    REMOVE_FROM_CATEGORY_USER_LIST_PROMPT,
+    REMOVE_FROM_CATEGORY_CONFIRM,
+    REMOVE_FROM_CATEGORY_SUCCESS
+)
 from admin_panel.basic_handlers import cancel_operation
-from utils.utilities import admin_required, get_category_label_by_id, handle_telegram_errors, remove_user_list_from_category
+from utils.utilities import admin_required, get_category_label_by_id, remove_user_list_from_category, handle_telegram_errors
 
 
 @admin_required
@@ -21,19 +28,15 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
         None: If no message was replied to
     """
     if not update.message.reply_to_message:
-        # If the command wasn't used in reply to a message, show an error message
-        await update.message.reply_text('⚠️ You have to use this command in reply to a list of user ID\'s.')
+        await update.message.reply_text(CATEGORY_ERROR_REPLY)
         return
 
-    # Parse the list of user ID's in the replied message
+    # Parse space-separated user IDs from the replied message
     user_ids = update.message.reply_to_message.text.split()
     context.user_data['user_list_to_remove'] = user_ids
 
-    # Prompt user to select a category
-    await update.message.reply_text(
-        '📈 Please select a category to remove the user list from:',
-        reply_markup=fixed_keyboards.CATEGORIES
-    )
+    # Prompt user to select category
+    await update.message.reply_text(REMOVE_FROM_CATEGORY_SELECT_PROMPT, reply_markup=fixed_keyboards.CATEGORIES)
 
     return 'GET_CATEGORY_ID_TO_REMOVE'
 
@@ -51,10 +54,8 @@ async def get_user_list_from_user_update(update: Update, context: CallbackContex
     Returns:
         str: The next conversation state 'SET_USER_LIST'
     """
-    await update.callback_query.edit_message_text(
-        '📋 Send the list of user IDs you want to remove from a category.',
-        reply_markup=fixed_keyboards.CANCEL_OPERATION
-    )
+    await update.callback_query.edit_message_text(REMOVE_FROM_CATEGORY_USER_LIST_PROMPT,
+                                                  reply_markup=fixed_keyboards.CANCEL_OPERATION)
     return 'SET_USER_LIST'
 
 
@@ -70,22 +71,19 @@ async def set_user_list(update: Update, context: CallbackContext):
     Returns:
         str: The next conversation state 'GET_CATEGORY_ID_TO_REMOVE'
     """
-    # Parse the list of user ID's from the message
+    # Parse space-separated user IDs from message
     user_ids = update.message.text.split()
     context.user_data['user_list_to_remove'] = user_ids
 
-    # Prompt user to select a category
-    await update.message.reply_text(
-        '📈 Please select a category to remove the user list from:',
-        reply_markup=fixed_keyboards.CATEGORIES
-    )
+    await update.message.reply_text(REMOVE_FROM_CATEGORY_SELECT_PROMPT, reply_markup=fixed_keyboards.CATEGORIES)
     return 'GET_CATEGORY_ID_TO_REMOVE'
 
 
+@admin_required
 @handle_telegram_errors
 async def get_category_id(update: Update, context: CallbackContext):
     """
-    Handler for processing the selected category and asking for confirmation.
+    Handler for processing selected category and asking for confirmation.
 
     Args:
         update (Update): The Telegram update object
@@ -94,21 +92,23 @@ async def get_category_id(update: Update, context: CallbackContext):
     Returns:
         str: The next conversation state 'CONFIRM_REMOVE_CATEGORY'
     """
-    # Get the category_id from the callback query
+    # Store selected category ID from callback data
     category_id = update.callback_query.data
     context.user_data['category_id_to_remove'] = category_id
 
     await update.callback_query.answer()
 
-    # Show confirmation prompt with category name
+    # Show confirmation prompt
     await update.callback_query.edit_message_text(
-        f'❓ Are you sure you want to remove the user list from category {get_category_label_by_id(category_id)}?',
+        REMOVE_FROM_CATEGORY_CONFIRM.format(
+            category=get_category_label_by_id(category_id)),
         reply_markup=fixed_keyboards.CONFIRMATION
     )
 
     return 'CONFIRM_REMOVE_CATEGORY'
 
 
+@admin_required
 @handle_telegram_errors
 async def confirm(update: Update, context: CallbackContext):
     """
@@ -132,26 +132,28 @@ async def confirm(update: Update, context: CallbackContext):
     category_id = context.user_data['category_id_to_remove']
     user_list = context.user_data['user_list_to_remove']
 
-    # Remove the user list from the category
+    # Remove users from category
     remove_user_list_from_category(category_id, user_list)
 
     await update.callback_query.answer()
 
     # Show success message
     await update.callback_query.edit_message_text(
-        f'✅ Selected list removed from category {get_category_label_by_id(category_id)} successfully!',
+        REMOVE_FROM_CATEGORY_SUCCESS.format(
+            category=get_category_label_by_id(category_id)),
         reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
     )
 
-    # Clean up user data
     context.user_data.clear()
 
     return ConversationHandler.END
 
+
 remove_from_category_handler = ConversationHandler(
     entry_points=[
         CommandHandler('removefromcategory', get_user_list_from_reply),
-        CallbackQueryHandler(callback=get_user_list_from_user_update, pattern='START_REMOVE_FROM_CATEGORY')
+        CallbackQueryHandler(
+            callback=get_user_list_from_user_update, pattern='START_REMOVE_FROM_CATEGORY')
     ],
     states={
         'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=set_user_list)],

@@ -7,7 +7,7 @@ from utils.strings import (
     SEND_MESSAGE_SUCCESS,
     SEND_MESSAGE_ERROR
 )
-from admin_panel.basic_handlers import cancel_operation
+from handler_modules.basic_handlers import cancel_operation
 from utils.utilities import admin_required, handle_telegram_errors
 
 
@@ -127,6 +127,27 @@ send_message_handler = ConversationHandler(
     ],
     states={
         'SET_MESSAGE_ID': [MessageHandler(filters=~filters.COMMAND, callback=set_message_id)]
+    },
+    fallbacks=[
+        CommandHandler('cancel', cancel_operation),
+        CallbackQueryHandler(cancel_operation, pattern='CANCEL')
+    ]
+)
+
+
+send_message_handler = ConversationHandler(
+    entry_points=[
+        CommandHandler('send', get_message_from_reply),
+        CallbackQueryHandler(
+            callback=get_message_from_user_update, pattern='START_SEND_MESSAGE')
+    ],
+    states={
+        'SET_MESSAGE_ID': [
+            MessageHandler(
+                filters=~filters.COMMAND, 
+                callback=set_message_id
+            )
+        ]
     },
     fallbacks=[
         CommandHandler('cancel', cancel_operation),

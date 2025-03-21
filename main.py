@@ -2,8 +2,8 @@ from telegram.ext import Application, CommandHandler, ConversationHandler, Callb
 import logging
 from dotenv import dotenv_values
 
-from admin_panel import basic_handlers
-from admin_panel.handler_modules import set_category, add_to_category, bulk_send, send_message, remove_from_category, export_history
+from handler_modules import basic_handlers
+from handler_modules.admin_panel import set_category, add_to_category, bulk_send, send_message, remove_from_category, export_history
 
 # Enable logging
 logging.basicConfig(
@@ -31,7 +31,7 @@ def main():
     application.add_handler(CallbackQueryHandler(
         callback=basic_handlers.show_help, pattern='SHOW_HELP'))
 
-    application.add_handler(CommandHandler('send', send_message.send_message))
+    # application.add_handler(CommandHandler('send', send_message.send_message))
 
     application.add_handler(bulk_send.bulk_send_handler)
     application.add_handler(set_category.set_category_handler)

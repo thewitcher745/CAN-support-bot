@@ -34,8 +34,8 @@ async def export_history(update: Update, context: CallbackContext):
         chat_id = get_chat_id(update)
 
         # Define file paths
-        history_file = 'admin_panel/data/user_history.json'
-        csv_path = f'admin_panel/data/user_history.csv'
+        history_file = 'data/user_history.json'
+        csv_path = f'data/user_history.csv'
 
         # Read user history from JSON
         with open(history_file, 'r', encoding='utf-8') as f:

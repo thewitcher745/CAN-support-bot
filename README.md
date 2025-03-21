@@ -11,6 +11,8 @@ lists for bulk messaging and managing user categories through an admin panel.
 - Keyboard interface for easy category management
 - Can set and unset categories for different users using their ID, using the /setcategory and /unsetcategory commands
 - Admin-only commands for managing user lists and categories
+- Export user history and categories to CSV
+- Automatic user registration tracking
 - Fallback to sending messages back to the sender
 - Error handling for invalid user IDs or permission issues
 
@@ -39,7 +41,7 @@ lists for bulk messaging and managing user categories through an admin panel.
 
 4. Create required JSON files:
 
-   Create `admin_panel/data/admins.json`:
+   Create `data/admins.json`:
    ```json
    {
      "admins": [
@@ -49,7 +51,7 @@ lists for bulk messaging and managing user categories through an admin panel.
    }
    ```
 
-   Create `admin_panel/data/user_lists.json` with the desired categories (the 'INTERESTED' category is required):
+   Create `data/user_lists.json` with the desired categories (the 'INTERESTED' category is required):
    ```json
    {
        "0": {
@@ -63,6 +65,8 @@ lists for bulk messaging and managing user categories through an admin panel.
    }
    ```
 
+   The bot will automatically create `data/user_history.json` to track user registrations.
+
 ## Usage
 
 1. Start the bot:
@@ -73,13 +77,12 @@ lists for bulk messaging and managing user categories through an admin panel.
 2. In Telegram, start a conversation with your bot by sending the `/start` command.
 
 3. Available commands:
+   - `/start` - Start the bot and access main menu
    - `/help` - View guide on using the bot
-   - `/send` - Send or forward a message to a user ID
-   - `/admin` - Access admin panel (admin only)
-   - `/setcategory` - Set a user's category (admin only)
-   - `/unsetcategory` - Remove a user from a category (admin only)
-   - `/addusers` - Add multiple users to a category (admin only)
-   - `/removeusers` - Remove multiple users from a category (admin only)
+   - `/bulksend` - Send a message to all users in a selected category (admin only)
+   - `/setcategory` - Assign users to a category (admin only)
+   - `/addtocategory` - Add users to an existing category (admin only)
+   - `/removefromcategory` - Remove users from a category (admin only)
 
 ## Admin Panel
 
@@ -87,7 +90,21 @@ The admin panel provides a keyboard interface for:
 - Managing users in each category
 - Adding/removing users from categories
 - Sending messages to users in bulk
+- Exporting user history and categories
 - Viewing the help
+
+## User Tracking
+
+The bot automatically tracks:
+- User ID
+- First name
+- Last name
+- Username
+- Language preference
+- Registration date
+- Category memberships
+
+This data can be exported to CSV format using the export history feature.
 
 ## How to Find a User ID
 
@@ -104,8 +121,13 @@ The bot includes error handling for:
 - Permission errors (when a user has blocked the bot)
 - Admin authentication failures
 - Invalid category operations
+- File operation errors
 - Other exceptions that might occur during operation
 
 ## Logging
 
-The bot uses Python's built-in logging module to provide information about its operation.
+The bot uses Python's built-in logging module to provide information about its operation, including:
+- Command usage
+- Error tracking
+- User interactions
+- Admin operations

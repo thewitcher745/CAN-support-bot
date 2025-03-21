@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import CallbackContext, ConversationHandler
+from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
@@ -147,3 +147,19 @@ async def confirm(update: Update, context: CallbackContext):
     context.user_data.clear()
 
     return ConversationHandler.END
+
+remove_from_category_handler = ConversationHandler(
+    entry_points=[
+        CommandHandler('removefromcategory', get_user_list_from_reply),
+        CallbackQueryHandler(callback=get_user_list_from_user_update, pattern='START_REMOVE_FROM_CATEGORY')
+    ],
+    states={
+        'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=set_user_list)],
+        'GET_CATEGORY_ID_TO_REMOVE': [CallbackQueryHandler(get_category_id)],
+        'CONFIRM_REMOVE_CATEGORY': [CallbackQueryHandler(callback=confirm)]
+    },
+    fallbacks=[
+        CommandHandler('cancel', basic_handlers.cancel_operation),
+        CallbackQueryHandler(basic_handlers.cancel_operation, pattern='CANCEL')
+    ]
+)

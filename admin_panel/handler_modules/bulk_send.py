@@ -8,7 +8,7 @@ Messages can be selected either by:
 """
 
 from telegram import error, Update
-from telegram.ext import CallbackContext, ConversationHandler
+from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
@@ -52,7 +52,7 @@ async def get_message_from_reply(update: Update, context: CallbackContext):
         )
 
         context.user_data.clear()
-        
+
         return ConversationHandler.END
 
 
@@ -202,3 +202,21 @@ async def confirm(update: Update, context: CallbackContext):
 
     context.user_data.clear()
     return ConversationHandler.END
+
+
+bulk_send_handler = ConversationHandler(
+    entry_points=[
+        CommandHandler('bulksend', get_message_from_reply),
+        CallbackQueryHandler(
+            callback=get_message_from_user_update, pattern='START_BULK_SEND')
+    ],
+    states={
+        'SET_MESSAGE_ID': [MessageHandler(filters=~filters.COMMAND, callback=set_message_id)],
+        'GET_CATEGORY_ID': [CallbackQueryHandler(get_category_id)],
+        'CONFIRM_BULK_SEND': [CallbackQueryHandler(confirm)]
+    },
+    fallbacks=[
+        CommandHandler('cancel', cancel_operation),
+        CallbackQueryHandler(cancel_operation, pattern='CANCEL')
+    ]
+)

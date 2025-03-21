@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import CallbackContext, ConversationHandler
+from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
@@ -11,11 +11,11 @@ from utils.utilities import admin_required, get_category_label_by_id, add_user_l
 async def get_user_list_from_reply(update: Update, context: CallbackContext):
     """
     Handler for getting a list of user IDs from a replied message to add to a category.
-    
+
     Args:
         update (Update): The Telegram update object
         context (CallbackContext): The callback context object
-        
+
     Returns:
         str: The next conversation state 'GET_CATEGORY_ID_TO_ADD'
         None: If no message was replied to
@@ -30,7 +30,7 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
 
     # Prompt user to select category
     await update.message.reply_text(
-        '📈 Please select a category to add the user list to:', 
+        '📈 Please select a category to add the user list to:',
         reply_markup=fixed_keyboards.CATEGORIES
     )
 
@@ -42,11 +42,11 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
 async def get_user_list_from_user_update(update: Update, context: CallbackContext):
     """
     Handler for getting a list of user IDs directly from user input after clicking menu button.
-    
+
     Args:
         update (Update): The Telegram update object
         context (CallbackContext): The callback context object
-        
+
     Returns:
         str: The next conversation state 'SET_USER_LIST'
     """
@@ -61,11 +61,11 @@ async def get_user_list_from_user_update(update: Update, context: CallbackContex
 async def set_user_list(update: Update, context: CallbackContext):
     """
     Handler for processing user-provided list of IDs and prompting for category selection.
-    
+
     Args:
         update (Update): The Telegram update object
         context (CallbackContext): The callback context object
-        
+
     Returns:
         str: The next conversation state 'GET_CATEGORY_ID_TO_ADD'
     """
@@ -74,7 +74,7 @@ async def set_user_list(update: Update, context: CallbackContext):
     context.user_data['user_list_to_add'] = user_ids
 
     await update.message.reply_text(
-        '📈 Please select a category to add the user list to:', 
+        '📈 Please select a category to add the user list to:',
         reply_markup=fixed_keyboards.CATEGORIES
     )
     return 'GET_CATEGORY_ID_TO_ADD'
@@ -85,11 +85,11 @@ async def set_user_list(update: Update, context: CallbackContext):
 async def get_category_id(update: Update, context: CallbackContext):
     """
     Handler for processing selected category and asking for confirmation.
-    
+
     Args:
         update (Update): The Telegram update object
         context (CallbackContext): The callback context object
-        
+
     Returns:
         str: The next conversation state 'CONFIRM_ADD_CATEGORY'
     """
@@ -113,11 +113,11 @@ async def get_category_id(update: Update, context: CallbackContext):
 async def confirm(update: Update, context: CallbackContext):
     """
     Handler for processing confirmation and adding users to selected category.
-    
+
     Args:
         update (Update): The Telegram update object
         context (CallbackContext): The callback context object
-        
+
     Returns:
         int: ConversationHandler.END on success
         Any: Result of cancel_operation() if not confirmed
@@ -145,3 +145,21 @@ async def confirm(update: Update, context: CallbackContext):
 
     context.user_data.clear()
     return ConversationHandler.END
+
+
+add_to_category_handler = ConversationHandler(
+    entry_points=[
+        CommandHandler('addtocategory', get_user_list_from_reply),
+        CallbackQueryHandler(
+            callback=get_user_list_from_user_update, pattern='START_ADD_TO_CATEGORY')
+    ],
+    states={
+        'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=set_user_list)],
+        'GET_CATEGORY_ID_TO_ADD': [CallbackQueryHandler(get_category_id)],
+        'CONFIRM_ADD_CATEGORY': [CallbackQueryHandler(callback=confirm)]
+    },
+    fallbacks=[
+        CommandHandler('cancel', basic_handlers.cancel_operation),
+        CallbackQueryHandler(basic_handlers.cancel_operation, pattern='CANCEL')
+    ]
+)

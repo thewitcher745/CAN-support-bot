@@ -2,26 +2,26 @@ import json
 import csv
 import os
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from utils.fixed_keyboards import RETURN_TO_MAIN_MENU
-from utils.utilities import get_chat_id, get_categories_for_user, get_category_label_by_id
+from utils.utilities import get_chat_id, get_categories_for_user
 
 
 async def export_history(update: Update, context: CallbackContext):
     """
     Handler to export user history to CSV and send it to the admin.
-    
+
     Reads user history from JSON file, converts it to CSV format with user details
     and their associated categories, then sends the CSV file to the admin via Telegram.
-    
+
     Args:
         update (Update): The incoming update from Telegram
         context (CallbackContext): The callback context
-        
+
     Returns:
         None
-        
+
     Raises:
         Exception: If there's an error during file operations or sending messages
     """
@@ -42,18 +42,18 @@ async def export_history(update: Update, context: CallbackContext):
             'user_id', 'first_name', 'last_name',
             'language', 'username', 'start_time', 'categories'
         ]
-        
+
         with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-            
+
             # Process each user entry
             for entry in user_history:
                 # Get categories for current user
                 categories_containing_user = get_categories_for_user(
                     entry.get('user_id', '')
                 )
-                
+
                 # Write user data to CSV
                 writer.writerow({
                     'user_id': entry.get('user_id', ''),
@@ -93,3 +93,8 @@ async def export_history(update: Update, context: CallbackContext):
             reply_markup=RETURN_TO_MAIN_MENU
         )
         await update.callback_query.answer()
+
+export_history_handler = CallbackQueryHandler(
+    callback=export_history,
+    pattern='EXPORT_HISTORY'
+)

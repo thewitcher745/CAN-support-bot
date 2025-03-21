@@ -149,3 +149,24 @@ async def confirm(update: Update, context: CallbackContext):
     context.user_data.clear()
 
     return ConversationHandler.END
+
+from telegram.ext import ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
+from . import basic_handlers
+
+# ... existing code ...
+
+set_category_handler = ConversationHandler(
+    entry_points=[
+        CommandHandler('setcategory', get_user_list_from_reply),
+        CallbackQueryHandler(callback=get_user_list_from_user_update, pattern='START_SET_CATEGORY')
+    ],
+    states={
+        'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=set_user_list)],
+        'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(get_category_id)],
+        'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=confirm)]
+    },
+    fallbacks=[
+        CommandHandler('cancel', basic_handlers.cancel_operation),
+        CallbackQueryHandler(basic_handlers.cancel_operation, pattern='CANCEL')
+    ]
+)

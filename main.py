@@ -33,80 +33,11 @@ def main():
 
     application.add_handler(CommandHandler('send', send_message.send_message))
 
-    # Bulk sending
-    application.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('bulksend', bulk_send.get_message_from_reply),
-                      CallbackQueryHandler(callback=bulk_send.get_message_from_user_update, pattern='START_BULK_SEND')],
-        states={'SET_MESSAGE_ID': [MessageHandler(filters=~filters.COMMAND, callback=bulk_send.set_message_id)],
-                'GET_CATEGORY_ID': [CallbackQueryHandler(bulk_send.get_category_id)],
-                'CONFIRM_BULK_SEND': [CallbackQueryHandler(bulk_send.confirm)]},
-        fallbacks=[CommandHandler('cancel', basic_handlers.cancel_operation),
-                   CallbackQueryHandler(basic_handlers.cancel_operation, pattern='CANCEL')]
-    ))
-
-    # Category setting
-    application.add_handler(ConversationHandler(
-        entry_points=[
-            CommandHandler(
-                'setcategory', set_category.get_user_list_from_reply),
-            CallbackQueryHandler(
-                callback=set_category.get_user_list_from_user_update, pattern='START_SET_CATEGORY')
-        ],
-        states={
-            'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=set_category.set_user_list)],
-            'GET_CATEGORY_ID_TO_SET': [CallbackQueryHandler(set_category.get_category_id)],
-            'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=set_category.confirm)]
-        },
-        fallbacks=[
-            CommandHandler('cancel', basic_handlers.cancel_operation),
-            CallbackQueryHandler(
-                basic_handlers.cancel_operation, pattern='CANCEL')
-        ]
-    ))
-
-    # Adding to category lists
-    application.add_handler(ConversationHandler(
-        entry_points=[
-            CommandHandler('addtocategory',
-                           add_to_category.get_user_list_from_reply),
-            CallbackQueryHandler(
-                callback=add_to_category.get_user_list_from_user_update, pattern='START_ADD_TO_CATEGORY')
-        ],
-        states={
-            'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=add_to_category.set_user_list)],
-            'GET_CATEGORY_ID_TO_ADD': [CallbackQueryHandler(add_to_category.get_category_id)],
-            'CONFIRM_ADD_CATEGORY': [CallbackQueryHandler(callback=add_to_category.confirm)]
-        },
-        fallbacks=[
-            CommandHandler('cancel', basic_handlers.cancel_operation),
-            CallbackQueryHandler(
-                basic_handlers.cancel_operation, pattern='CANCEL')
-        ]
-    ))
-
-    # Removing from category lists
-    application.add_handler(ConversationHandler(
-        entry_points=[
-            CommandHandler('removefromcategory',
-                           remove_from_category.get_user_list_from_reply),
-            CallbackQueryHandler(
-                callback=remove_from_category.get_user_list_from_user_update, pattern='START_REMOVE_FROM_CATEGORY')
-        ],
-        states={
-            'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=remove_from_category.set_user_list)],
-            'GET_CATEGORY_ID_TO_REMOVE': [CallbackQueryHandler(remove_from_category.get_category_id)],
-            'CONFIRM_REMOVE_CATEGORY': [CallbackQueryHandler(callback=remove_from_category.confirm)]
-        },
-        fallbacks=[
-            CommandHandler('cancel', basic_handlers.cancel_operation),
-            CallbackQueryHandler(
-                basic_handlers.cancel_operation, pattern='CANCEL')
-        ]
-    ))
-
-    # Export history
-    application.add_handler(CallbackQueryHandler(
-        callback=export_history.export_history, pattern='EXPORT_HISTORY'))
+    application.add_handler(bulk_send.bulk_send_handler)
+    application.add_handler(set_category.set_category_handler)
+    application.add_handler(add_to_category.add_to_category_handler)
+    application.add_handler(remove_from_category.remove_from_category_handler)
+    application.add_handler(export_history.export_history_handler)
 
     # Start the bot
     application.run_polling()

@@ -1,5 +1,5 @@
 from telegram import Update, error
-from telegram.ext import CallbackContext, ConversationHandler
+from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
@@ -30,7 +30,7 @@ async def get_user_list_from_reply(update: Update, context: CallbackContext):
 
     # Prompt user to select category
     await update.message.reply_text(
-        '📈 Please select a category to set the user list for:', 
+        '📈 Please select a category to set the user list for:',
         reply_markup=fixed_keyboards.CATEGORIES
     )
 
@@ -150,15 +150,11 @@ async def confirm(update: Update, context: CallbackContext):
 
     return ConversationHandler.END
 
-from telegram.ext import ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
-from . import basic_handlers
-
-# ... existing code ...
-
 set_category_handler = ConversationHandler(
     entry_points=[
         CommandHandler('setcategory', get_user_list_from_reply),
-        CallbackQueryHandler(callback=get_user_list_from_user_update, pattern='START_SET_CATEGORY')
+        CallbackQueryHandler(
+            callback=get_user_list_from_user_update, pattern='START_SET_CATEGORY')
     ],
     states={
         'SET_USER_LIST': [MessageHandler(filters=~filters.COMMAND, callback=set_user_list)],
@@ -166,7 +162,7 @@ set_category_handler = ConversationHandler(
         'CONFIRM_SET_CATEGORY': [CallbackQueryHandler(callback=confirm)]
     },
     fallbacks=[
-        CommandHandler('cancel', basic_handlers.cancel_operation),
-        CallbackQueryHandler(basic_handlers.cancel_operation, pattern='CANCEL')
+        CommandHandler('cancel', cancel_operation),
+        CallbackQueryHandler(cancel_operation, pattern='CANCEL')
     ]
 )

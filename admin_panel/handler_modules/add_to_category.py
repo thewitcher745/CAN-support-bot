@@ -159,7 +159,7 @@ add_to_category_handler = ConversationHandler(
         'CONFIRM_ADD_CATEGORY': [CallbackQueryHandler(callback=confirm)]
     },
     fallbacks=[
-        CommandHandler('cancel', basic_handlers.cancel_operation),
-        CallbackQueryHandler(basic_handlers.cancel_operation, pattern='CANCEL')
+        CommandHandler('cancel', cancel_operation),
+        CallbackQueryHandler(cancel_operation, pattern='CANCEL')
     ]
 )

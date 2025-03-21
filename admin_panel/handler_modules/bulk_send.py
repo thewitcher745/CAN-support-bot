@@ -7,7 +7,7 @@ Messages can be selected either by:
 2. Sending/forwarding a message to the bot after selecting the Bulk Send option from the main menu
 """
 
-from telegram import error, Update
+from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards

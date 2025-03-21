@@ -1,16 +1,13 @@
 from telegram import Update
-from telegram.ext import (
-    CallbackContext,
-    ConversationHandler,
-    CommandHandler,
-    CallbackQueryHandler,
-    MessageHandler,
-    filters,
-)
+from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 from utils import fixed_keyboards
-from utils.strings import SEND_MESSAGE_PROMPT, SEND_MESSAGE_SUCCESS, SEND_MESSAGE_ERROR
-from handler_modules.basic_handlers import cancel_operation
+from utils.strings import (
+    SEND_MESSAGE_PROMPT,
+    SEND_MESSAGE_SUCCESS,
+    SEND_MESSAGE_ERROR
+)
+from admin_panel.basic_handlers import cancel_operation
 from utils.utilities import admin_required, handle_telegram_errors
 
 
@@ -37,31 +34,28 @@ async def get_message_from_reply(update: Update, context: CallbackContext):
         else:
             target_user_id = args[0]
 
-        context.user_data["target_user_id"] = target_user_id
-        context.user_data["message_id"] = update.message.reply_to_message.message_id
-        context.user_data["from_chat_id"] = update.effective_chat.id
+        context.user_data['target_user_id'] = target_user_id
+        context.user_data['message_id'] = update.message.reply_to_message.message_id
+        context.user_data['from_chat_id'] = update.effective_chat.id
 
         try:
-            await context.bot.copy_message(
-                chat_id=target_user_id,
-                from_chat_id=update.effective_chat.id,
-                message_id=update.message.reply_to_message.message_id,
-            )
-            await update.message.reply_text(
-                SEND_MESSAGE_SUCCESS.format(user_id=target_user_id),
-                reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
-            )
+            await context.bot.copy_message(chat_id=target_user_id,
+                                           from_chat_id=update.effective_chat.id,
+                                           message_id=update.message.reply_to_message.message_id
+                                           )
+            await update.message.reply_text(SEND_MESSAGE_SUCCESS.format(user_id=target_user_id),
+                                            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
+                                            )
         except Exception as e:
-            await update.message.reply_text(
-                SEND_MESSAGE_ERROR.format(error=str(e)),
-                reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
-            )
+            await update.message.reply_text(SEND_MESSAGE_ERROR.format(error=str(e)),
+                                            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
+                                            )
 
         return ConversationHandler.END
 
     else:
         await update.message.reply_text(SEND_MESSAGE_PROMPT)
-        return "SET_MESSAGE_ID"
+        return 'SET_MESSAGE_ID'
 
 
 @admin_required
@@ -77,10 +71,9 @@ async def get_message_from_user_update(update: Update, context: CallbackContext)
     Returns:
         str: The next conversation state 'SET_MESSAGE_ID'
     """
-    await update.callback_query.edit_message_text(
-        SEND_MESSAGE_PROMPT, reply_markup=fixed_keyboards.CANCEL_OPERATION
-    )
-    return "SET_MESSAGE_ID"
+    await update.callback_query.edit_message_text(SEND_MESSAGE_PROMPT,
+                                                  reply_markup=fixed_keyboards.CANCEL_OPERATION)
+    return 'SET_MESSAGE_ID'
 
 
 @handle_telegram_errors
@@ -96,8 +89,8 @@ async def set_message_id(update: Update, context: CallbackContext):
         int: ConversationHandler.END
     """
     # Store the message details for later forwarding
-    context.user_data["message_id"] = update.message.message_id
-    context.user_data["from_chat_id"] = update.effective_chat.id
+    context.user_data['message_id'] = update.message.message_id
+    context.user_data['from_chat_id'] = update.effective_chat.id
 
     # Get the target user ID from command arguments
     args = context.args
@@ -111,16 +104,16 @@ async def set_message_id(update: Update, context: CallbackContext):
         await context.bot.copy_message(
             chat_id=target_user_id,
             from_chat_id=update.effective_chat.id,
-            message_id=update.message.message_id,
+            message_id=update.message.message_id
         )
         await update.message.reply_text(
             SEND_MESSAGE_SUCCESS.format(user_id=target_user_id),
-            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
         )
     except Exception as e:
         await update.message.reply_text(
             SEND_MESSAGE_ERROR.format(error=str(e)),
-            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+            reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
         )
 
     return ConversationHandler.END
@@ -128,37 +121,15 @@ async def set_message_id(update: Update, context: CallbackContext):
 
 send_message_handler = ConversationHandler(
     entry_points=[
-        CommandHandler("send", get_message_from_reply),
+        CommandHandler('send', get_message_from_reply),
         CallbackQueryHandler(
-            callback=get_message_from_user_update, pattern="START_SEND_MESSAGE"
-        ),
+            callback=get_message_from_user_update, pattern='START_SEND_MESSAGE')
     ],
     states={
-        "SET_MESSAGE_ID": [
-            MessageHandler(filters=~filters.COMMAND, callback=set_message_id)
-        ]
+        'SET_MESSAGE_ID': [MessageHandler(filters=~filters.COMMAND, callback=set_message_id)]
     },
     fallbacks=[
-        CommandHandler("cancel", cancel_operation),
-        CallbackQueryHandler(cancel_operation, pattern="CANCEL"),
-    ],
-)
-
-
-send_message_handler = ConversationHandler(
-    entry_points=[
-        CommandHandler("send", get_message_from_reply),
-        CallbackQueryHandler(
-            callback=get_message_from_user_update, pattern="START_SEND_MESSAGE"
-        ),
-    ],
-    states={
-        "SET_MESSAGE_ID": [
-            MessageHandler(filters=~filters.COMMAND, callback=set_message_id)
-        ]
-    },
-    fallbacks=[
-        CommandHandler("cancel", cancel_operation),
-        CallbackQueryHandler(cancel_operation, pattern="CANCEL"),
-    ],
+        CommandHandler('cancel', cancel_operation),
+        CallbackQueryHandler(cancel_operation, pattern='CANCEL')
+    ]
 )

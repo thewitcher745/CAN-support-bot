@@ -7,14 +7,7 @@ import logging
 from dotenv import dotenv_values
 
 from handler_modules import basic_handlers
-from handler_modules.admin_panel import (
-    set_category,
-    add_to_category,
-    bulk_send,
-    send_message,
-    remove_from_category,
-    export_history,
-)
+from handler_modules.admin_panel import set_category, add_to_category, bulk_send, send_message, remove_from_category, export_history
 
 # Enable logging
 logging.basicConfig(

@@ -15,7 +15,7 @@ def register_user_start(start_message):
     The function creates a history file if it doesn't exist, extracts user information like name,
     language, ID etc. and adds it to the history if the user isn't already registered.
     """
-    history_file = "data/user_history.json"
+    history_file = 'data/user_history.json'
 
     # Create the history file if it doesn't exist
     if not os.path.exists(history_file):
@@ -62,7 +62,7 @@ def get_user_lists():
     Returns:
         dict: Dictionary containing all user lists and their metadata
     """
-    with open("data/user_lists.json", "r") as f:
+    with open('data/user_lists.json', 'r') as f:
         user_lists = json.load(f)
     return user_lists
 
@@ -110,10 +110,10 @@ def add_user_to_category(user_id, category_id):
     user_lists = get_user_lists()
 
     # Only add if user isn't already in the category
-    if user_id not in user_lists[category_id]["users"]:
-        user_lists[category_id]["users"].append(user_id)
-
-        with open("data/user_lists.json", "w") as f:
+    if user_id not in user_lists[category_id]['users']:
+        user_lists[category_id]['users'].append(user_id)
+        
+        with open('data/user_lists.json', 'w') as f:
             json.dump(user_lists, f, indent=4)
 
 
@@ -128,10 +128,10 @@ def remove_user_from_category(user_id, category_id):
     user_lists = get_user_lists()
 
     # Only remove if user is in the category
-    if user_id in user_lists[category_id]["users"]:
-        user_lists[category_id]["users"].remove(user_id)
-
-        with open("data/user_lists.json", "w") as f:
+    if user_id in user_lists[category_id]['users']:
+        user_lists[category_id]['users'].remove(user_id)
+        
+        with open('DATA/user_lists.json', 'w') as f:
             json.dump(user_lists, f, indent=4)
 
 
@@ -174,7 +174,7 @@ def set_category_user_list(category_id, user_list):
     user_lists = get_user_lists()
     user_lists[category_id]["users"] = user_list
 
-    with open("data/user_lists.json", "w") as f:
+    with open('DATA/user_lists.json', 'w') as f:
         json.dump(user_lists, f, indent=4)
 
 
@@ -193,7 +193,7 @@ def add_user_list_to_category(category_id, user_list):
         if user not in user_lists[category_id]["users"]:
             user_lists[category_id]["users"].append(user)
 
-    with open("data/user_lists.json", "w") as f:
+    with open('DATA/user_lists.json', 'w') as f:
         json.dump(user_lists, f, indent=4)
 
 
@@ -212,7 +212,7 @@ def remove_user_list_from_category(category_id, user_list):
         if user in user_lists[category_id]["users"]:
             user_lists[category_id]["users"].remove(user)
 
-    with open("data/user_lists.json", "w") as f:
+    with open('DATA/user_lists.json', 'w') as f:
         json.dump(user_lists, f, indent=4)
 
 
@@ -226,7 +226,7 @@ def is_user_admin(user_id):
     Returns:
         bool: True if user is an admin, False otherwise
     """
-    with open("data/admins.json", "r") as f:
+    with open('DATA/admins.json', 'r') as f:
         admins = json.load(f)
     return user_id in admins["admins"]
 

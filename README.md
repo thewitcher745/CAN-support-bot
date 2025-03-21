@@ -79,6 +79,7 @@ lists for bulk messaging and managing user categories through an admin panel.
 3. Available commands:
    - `/start` - Start the bot and access main menu
    - `/help` - View guide on using the bot
+   - `/send <user_id>` - Send or forward a message to a user ID
    - `/bulksend` - Send a message to all users in a selected category (admin only)
    - `/setcategory` - Assign users to a category (admin only)
    - `/addtocategory` - Add users to an existing category (admin only)

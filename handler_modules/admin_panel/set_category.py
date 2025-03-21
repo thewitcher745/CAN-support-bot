@@ -9,7 +9,7 @@ from utils.strings import (
     CATEGORY_CONFIRM_SET,
     CATEGORY_SET_SUCCESS
 )
-from admin_panel.basic_handlers import cancel_operation
+from handler_modules.basic_handlers import cancel_operation
 from utils.utilities import admin_required, get_category_label_by_id, set_category_user_list, handle_telegram_errors
 
 

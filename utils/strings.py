@@ -1,8 +1,10 @@
 # Basic Handler Messages
-ADMIN_WELCOME = "🔰 Welcome to the admin panel, {name}! Use /help to see what I can do, or use the \"Show help\" button below."
-ADMIN_WELCOME_BACK = "🔰 Welcome back to the admin panel! Use /help to see what I can do, or use the \"Show help\" button below."
+ADMIN_WELCOME = '🔰 Welcome to the admin panel, {name}! Use /help to see what I can do, or use the "Show help" button below.'
+ADMIN_WELCOME_BACK = '🔰 Welcome back to the admin panel! Use /help to see what I can do, or use the "Show help" button below.'
 USER_WELCOME = "🤖 Hello, {name}! I'm a bot that helps you contact CAN support. Choose your desired option from the menu below to continue."
-USER_WELCOME_BACK = "🤖 Welcome back! Choose your desired option from the menu below to continue."
+USER_WELCOME_BACK = (
+    "🤖 Welcome back! Choose your desired option from the menu below to continue."
+)
 ADMIN_HELP = """
 📝 This bot is used to contact users. Currently it supports the following commands and functionalities:
 
@@ -30,21 +32,37 @@ BULK_SEND_SUCCESS = "✅ Message sent to all users in category {category} succes
 # Category Management Messages
 CATEGORY_ERROR_REPLY = "⚠️ You have to use this command in reply to a list of user ID's."
 CATEGORY_SELECT_PROMPT = "📈 Please select a category to set the user list for:"
-CATEGORY_USER_LIST_PROMPT = "📋 Send the list of user IDs you want to set for the category."
-CATEGORY_CONFIRM_SET = "❓ Are you sure you want to set the user list for category {category}?"
+CATEGORY_USER_LIST_PROMPT = (
+    "📋 Send the list of user IDs you want to set for the category."
+)
+CATEGORY_CONFIRM_SET = (
+    "❓ Are you sure you want to set the user list for category {category}?"
+)
 CATEGORY_SET_SUCCESS = "✅ Category {category} set successfully!"
 
 # Add to Category Messages
 ADD_TO_CATEGORY_SELECT_PROMPT = "📈 Please select a category to add the user list to:"
-ADD_TO_CATEGORY_USER_LIST_PROMPT = "📋 Send the list of user IDs you want to add to a category."
-ADD_TO_CATEGORY_CONFIRM = "❓ Are you sure you want to add the user list to category {category}?"
+ADD_TO_CATEGORY_USER_LIST_PROMPT = (
+    "📋 Send the list of user IDs you want to add to a category."
+)
+ADD_TO_CATEGORY_CONFIRM = (
+    "❓ Are you sure you want to add the user list to category {category}?"
+)
 ADD_TO_CATEGORY_SUCCESS = "✅ Selected list added to category {category} successfully!"
 
 # Remove from Category Messages
-REMOVE_FROM_CATEGORY_SELECT_PROMPT = "📈 Please select a category to remove the user list from:"
-REMOVE_FROM_CATEGORY_USER_LIST_PROMPT = "📋 Send the list of user IDs you want to remove from a category."
-REMOVE_FROM_CATEGORY_CONFIRM = "❓ Are you sure you want to remove the user list from category {category}?"
-REMOVE_FROM_CATEGORY_SUCCESS = "✅ Selected list removed from category {category} successfully!"
+REMOVE_FROM_CATEGORY_SELECT_PROMPT = (
+    "📈 Please select a category to remove the user list from:"
+)
+REMOVE_FROM_CATEGORY_USER_LIST_PROMPT = (
+    "📋 Send the list of user IDs you want to remove from a category."
+)
+REMOVE_FROM_CATEGORY_CONFIRM = (
+    "❓ Are you sure you want to remove the user list from category {category}?"
+)
+REMOVE_FROM_CATEGORY_SUCCESS = (
+    "✅ Selected list removed from category {category} successfully!"
+)
 
 # Export History Messages
 EXPORT_HISTORY_START = "📊 Preparing to export history..."

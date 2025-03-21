@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from admin_panel.utilities import admin_required, handle_telegram_errors
+from utils.utilities import admin_required, handle_telegram_errors
 
 
 @handle_telegram_errors

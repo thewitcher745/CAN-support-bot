@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-from admin_panel.utilities import get_category_id_list
+from utils.utilities import get_category_id_list
 
 CONFIRMATION = InlineKeyboardMarkup(
     [[InlineKeyboardButton('✅ Yes', callback_data='CONFIRM'), InlineKeyboardButton(

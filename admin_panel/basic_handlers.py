@@ -1,8 +1,8 @@
 from telegram.ext import CallbackContext, ConversationHandler
 from telegram import Update
 
-from admin_panel import fixed_keyboards
-from admin_panel.utilities import (
+from utils import fixed_keyboards
+from utils.utilities import (
     add_user_to_category,
     is_user_admin,
     get_chat_id,
@@ -41,7 +41,7 @@ async def start(update: Update, context: CallbackContext):
         if update_type == 'MESSAGE':
             # Register new user start and send welcome
             register_user_start(update.message)
-                
+
             await update.message.reply_text(
                 f'🤖 Hello, {update.message.from_user.first_name}! '
                 'I\'m a bot that helps you contact CAN support. Use /help to see what I can do.'

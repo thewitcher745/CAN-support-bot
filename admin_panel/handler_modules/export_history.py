@@ -4,8 +4,8 @@ import os
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from admin_panel.fixed_keyboards import RETURN_TO_MAIN_MENU
-from admin_panel.utilities import get_chat_id, get_categories_for_user, get_category_label_by_id
+from utils.fixed_keyboards import RETURN_TO_MAIN_MENU
+from utils.utilities import get_chat_id, get_categories_for_user, get_category_label_by_id
 
 
 async def export_history(update: Update, context: CallbackContext):

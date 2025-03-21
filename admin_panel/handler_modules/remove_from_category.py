@@ -1,9 +1,9 @@
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
-from admin_panel import fixed_keyboards
+from utils import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
-from admin_panel.utilities import admin_required, get_category_label_by_id, handle_telegram_errors, remove_user_list_from_category
+from utils.utilities import admin_required, get_category_label_by_id, handle_telegram_errors, remove_user_list_from_category
 
 
 @admin_required

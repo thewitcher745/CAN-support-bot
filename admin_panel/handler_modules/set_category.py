@@ -1,9 +1,9 @@
 from telegram import Update, error
 from telegram.ext import CallbackContext, ConversationHandler
 
-from admin_panel import fixed_keyboards
+from utils import fixed_keyboards
 from admin_panel.basic_handlers import cancel_operation
-from admin_panel.utilities import admin_required, get_category_label_by_id, set_category_user_list, handle_telegram_errors
+from utils.utilities import admin_required, get_category_label_by_id, set_category_user_list, handle_telegram_errors
 
 
 @admin_required
@@ -78,7 +78,7 @@ async def set_user_list(update: Update, context: CallbackContext):
         '📈 Please select a category to set the user list for:',
         reply_markup=fixed_keyboards.CATEGORIES
     )
-    
+
     return 'GET_CATEGORY_ID_TO_SET'
 
 

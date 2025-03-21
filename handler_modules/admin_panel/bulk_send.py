@@ -19,7 +19,7 @@ from utils.strings import (
     BULK_SEND_ERROR_USER,
     BULK_SEND_SUCCESS
 )
-from admin_panel.basic_handlers import cancel_operation
+from handler_modules.basic_handlers import cancel_operation
 from utils.utilities import admin_required, get_category_label_by_id, get_users_by_category_id, handle_telegram_errors
 
 

@@ -33,6 +33,7 @@ RETURN_TO_MAIN_MENU = InlineKeyboardMarkup(
     ]
 )
 
+
 ADMIN_PANEL_MAIN = InlineKeyboardMarkup(
     [
         [
@@ -67,16 +68,37 @@ ADMIN_PANEL_MAIN = InlineKeyboardMarkup(
 
 USER_PANEL_MAIN = InlineKeyboardMarkup(
     [
-        [InlineKeyboardButton("💰 Our VIP offers", callback_data="VIP_OFFERS")],
-        [InlineKeyboardButton("📈 Our results", callback_data="RESULTS")],
-        [InlineKeyboardButton("📞 Contact admin", callback_data="CONTACT_ADMIN")],
+        [InlineKeyboardButton("💰 CAN VIP offers", callback_data="VIP_OFFERS")],
+        [InlineKeyboardButton("📈 CAN VIP results", callback_data="RESULTS")],
+        [InlineKeyboardButton("📞 Contact admin", url="https://t.me/CANSupport")],
     ]
 )
+
+VIP_OFFERS = InlineKeyboardMarkup(
+    [
+        [
+            InlineKeyboardButton(
+                "💰 Get our wallet address", callback_data="WALLET_ADDRESS"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "🔙 Return to main menu", callback_data="RETURN_TO_MAIN_MENU"
+            )
+        ],
+    ]
+)
+
 
 MONTHLY_RESULTS = InlineKeyboardMarkup(
     [
         [InlineKeyboardButton("📅 January 2025", callback_data="JANUARY_2025")],
         [InlineKeyboardButton("📅 February 2025", callback_data="FEBRUARY_2025")],
         [InlineKeyboardButton("📅 March 2025", callback_data="MARCH_2025")],
+        [
+            InlineKeyboardButton(
+                "🔙 Return to main menu", callback_data="RETURN_TO_MAIN_MENU"
+            )
+        ],
     ]
 )

@@ -7,7 +7,15 @@ import logging
 from dotenv import dotenv_values
 
 from handler_modules import basic_handlers
-from handler_modules.admin_panel import set_category, add_to_category, bulk_send, send_message, remove_from_category, export_history
+from handler_modules.admin_panel import (
+    set_category,
+    add_to_category,
+    bulk_send,
+    send_message,
+    remove_from_category,
+    export_history,
+)
+from handler_modules.user_panel import send_user_message
 
 # Enable logging
 logging.basicConfig(
@@ -46,6 +54,10 @@ def main():
     application.add_handler(add_to_category.add_to_category_handler)
     application.add_handler(remove_from_category.remove_from_category_handler)
     application.add_handler(export_history.export_history_handler)
+
+    # User panel handlers are multiple handlers, so we need to add them all
+    for handler in send_user_message.send_user_message_handlers:
+        application.add_handler(handler)
 
     # Start the bot
     application.run_polling()

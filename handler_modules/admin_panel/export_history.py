@@ -6,8 +6,6 @@ from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from utils import fixed_keyboards
 from utils.strings import (
-    EXPORT_HISTORY_START,
-    EXPORT_HISTORY_SUCCESS,
     EXPORT_HISTORY_ERROR,
 )
 from utils.utilities import (
@@ -21,7 +19,7 @@ from utils.utilities import (
 @admin_required
 @handle_telegram_errors
 async def export_history(update: Update, context: CallbackContext):
-    """
+    '''
     Handler to export user history to CSV and send it to the admin.
 
     Reads user history from JSON file, converts it to CSV format with user details
@@ -33,31 +31,31 @@ async def export_history(update: Update, context: CallbackContext):
 
     Returns:
         None
-    """
+    '''
     try:
         # Get chat ID for the current admin user
         chat_id = get_chat_id(update)
 
         # Define file paths
-        history_file = "data/user_history.json"
-        csv_path = f"data/user_history.csv"
+        history_file = 'data/user_history.json'
+        csv_path = 'data/user_history.csv'
 
         # Read user history from JSON
-        with open(history_file, "r", encoding="utf-8") as f:
+        with open(history_file, 'r', encoding='utf-8') as f:
             user_history = json.load(f)
 
         # Define CSV structure and write data
         fieldnames = [
-            "user_id",
-            "first_name",
-            "last_name",
-            "language",
-            "username",
-            "start_time",
-            "categories",
+            'user_id',
+            'first_name',
+            'last_name',
+            'language',
+            'username',
+            'start_time',
+            'categories',
         ]
 
-        with open(csv_path, "w", newline="", encoding="utf-8") as csvfile:
+        with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -65,32 +63,32 @@ async def export_history(update: Update, context: CallbackContext):
             for entry in user_history:
                 # Get categories for current user
                 categories_containing_user = get_categories_for_user(
-                    entry.get("user_id", "")
+                    entry.get('user_id', '')
                 )
 
                 # Write user data to CSV
                 writer.writerow(
                     {
-                        "user_id": entry.get("user_id", ""),
-                        "first_name": entry.get("first_name", ""),
-                        "last_name": entry.get("last_name", ""),
-                        "language": entry.get("language", ""),
-                        "username": entry.get("username", ""),
-                        "start_time": entry.get("start_time", ""),
-                        "categories": " | ".join(categories_containing_user),
+                        'user_id': entry.get('user_id', ''),
+                        'first_name': entry.get('first_name', ''),
+                        'last_name': entry.get('last_name', ''),
+                        'language': entry.get('language', ''),
+                        'username': entry.get('username', ''),
+                        'start_time': entry.get('start_time', ''),
+                        'categories': ' | '.join(categories_containing_user),
                     }
                 )
 
         # Send CSV file to admin
-        with open(csv_path, "rb") as file:
+        with open(csv_path, 'rb') as file:
             await context.bot.send_document(
-                chat_id=chat_id, document=file, filename="user_history.csv"
+                chat_id=chat_id, document=file, filename='user_history.csv'
             )
 
         # Send success confirmation
         await context.bot.send_message(
             chat_id=chat_id,
-            text="✅ User history has been successfully exported to CSV!",
+            text='✅ User history has been successfully exported to CSV!',
             reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
         )
 
@@ -110,5 +108,5 @@ async def export_history(update: Update, context: CallbackContext):
 
 
 export_history_handler = CallbackQueryHandler(
-    callback=export_history, pattern="EXPORT_HISTORY"
+    callback=export_history, pattern='EXPORT_HISTORY'
 )

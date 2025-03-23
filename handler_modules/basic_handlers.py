@@ -23,7 +23,7 @@ from utils.utilities import (
 
 
 async def start(update: Update, context: CallbackContext):
-    """
+    '''
     Handle the /start command for both regular users and admins.
 
     For regular users:
@@ -40,14 +40,14 @@ async def start(update: Update, context: CallbackContext):
 
     Returns:
         None
-    """
+    '''
     chat_id = get_chat_id(update)
     update_type = get_update_type(update)
     is_admin = is_user_admin(chat_id)
 
     # Handle regular users
     if not is_admin:
-        if update_type == "MESSAGE":
+        if update_type == 'MESSAGE':
             # Register new user start and send welcome
             register_user_start(update.message)
 
@@ -74,11 +74,11 @@ async def start(update: Update, context: CallbackContext):
                 await update.callback_query.delete_message()
 
         # Add user to interested category
-        add_user_to_category(str(chat_id), "0")
+        add_user_to_category(str(chat_id), '0')
 
     # Handle admin users
     else:
-        if update_type == "MESSAGE":
+        if update_type == 'MESSAGE':
             await update.message.reply_text(
                 ADMIN_WELCOME.format(name=update.message.from_user.first_name),
                 reply_markup=fixed_keyboards.ADMIN_PANEL_MAIN,
@@ -92,7 +92,7 @@ async def start(update: Update, context: CallbackContext):
 
 @handle_telegram_errors
 async def show_help(update: Update, context: CallbackContext):
-    """
+    '''
     Show help message appropriate for the user's role (admin or regular user).
 
     The help message contains:
@@ -105,13 +105,13 @@ async def show_help(update: Update, context: CallbackContext):
 
     Returns:
         None
-    """
+    '''
     chat_id = get_chat_id(update)
     update_type = get_update_type(update)
 
     help_message = ADMIN_HELP if is_user_admin(chat_id) else USER_HELP
 
-    if update_type == "MESSAGE":
+    if update_type == 'MESSAGE':
         await update.message.reply_text(
             help_message, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
         )
@@ -124,7 +124,7 @@ async def show_help(update: Update, context: CallbackContext):
 
 @handle_telegram_errors
 async def cancel_operation(update: Update, context: CallbackContext):
-    """
+    '''
     Cancel the current operation and return to main menu.
 
     Handles both message and callback query updates, clears user data
@@ -136,7 +136,7 @@ async def cancel_operation(update: Update, context: CallbackContext):
 
     Returns:
         int: ConversationHandler.END to end the conversation
-    """
+    '''
     try:
         # Try handling as message update
         await context.bot.send_message(

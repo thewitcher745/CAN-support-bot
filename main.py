@@ -19,13 +19,13 @@ from handler_modules.user_panel import send_user_message
 
 # Enable logging
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
 logger = logging.getLogger(__name__)
 
 # Replace with your bot token from BotFather
-TOKEN = dotenv_values(".env.secret")["BOT_TOKEN"]
+TOKEN = dotenv_values('.env.secret')['BOT_TOKEN']
 
 
 def main():
@@ -34,17 +34,17 @@ def main():
     )
 
     # Start/Main menu
-    application.add_handler(CommandHandler("start", basic_handlers.start))
+    application.add_handler(CommandHandler('start', basic_handlers.start))
     application.add_handler(
         CallbackQueryHandler(
-            callback=basic_handlers.start, pattern="RETURN_TO_MAIN_MENU"
+            callback=basic_handlers.start, pattern='RETURN_TO_MAIN_MENU'
         )
     )
 
     # Help menu
-    application.add_handler(CommandHandler("help", basic_handlers.show_help))
+    application.add_handler(CommandHandler('help', basic_handlers.show_help))
     application.add_handler(
-        CallbackQueryHandler(callback=basic_handlers.show_help, pattern="SHOW_HELP")
+        CallbackQueryHandler(callback=basic_handlers.show_help, pattern='SHOW_HELP')
     )
 
     # application.add_handler(CommandHandler('send', send_message.send_message))
@@ -63,5 +63,5 @@ def main():
     application.run_polling()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

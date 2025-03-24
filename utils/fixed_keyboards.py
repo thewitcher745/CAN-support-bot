@@ -24,13 +24,7 @@ CATEGORIES = InlineKeyboardMarkup(
 )
 
 RETURN_TO_MAIN_MENU = InlineKeyboardMarkup(
-	[
-		[
-			InlineKeyboardButton(
-				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
-			)
-		]
-	]
+	[[InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU')]]
 )
 
 
@@ -81,11 +75,7 @@ OFFERS = InlineKeyboardMarkup(
 				'💰 Get our wallet address', callback_data='SELECT_WALLET_ADDRESS'
 			)
 		],
-		[
-			InlineKeyboardButton(
-				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
-			)
-		],
+		[InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU')],
 	]
 )
 
@@ -94,10 +84,8 @@ SELECT_WALLET_ADDRESS = InlineKeyboardMarkup(
 		[InlineKeyboardButton('💰 USDT TRC20', callback_data='WALLET_TRC20')],
 		[InlineKeyboardButton('💰 USDT BEP20', callback_data='WALLET_BEP20')],
 		[
-			InlineKeyboardButton(
-				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
-			),
-			InlineKeyboardButton('🔙 Previous menu', callback_data='OFFERS'),
+			InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'),
+			InlineKeyboardButton('🔙 Back', callback_data='OFFERS'),
 		],
 	]
 )
@@ -105,12 +93,8 @@ SELECT_WALLET_ADDRESS = InlineKeyboardMarkup(
 SHOW_WALLET_ADDRESS = InlineKeyboardMarkup(
 	[
 		[
-			InlineKeyboardButton(
-				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
-			),
-			InlineKeyboardButton(
-				'🔙 Previous menu', callback_data='SELECT_WALLET_ADDRESS'
-			),
+			InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'),
+			InlineKeyboardButton('🔙 Back', callback_data='SELECT_WALLET_ADDRESS'),
 		]
 	]
 )
@@ -118,10 +102,8 @@ SHOW_WALLET_ADDRESS = InlineKeyboardMarkup(
 SHOW_MONTHLY_RESULTS = InlineKeyboardMarkup(
 	[
 		[
-			InlineKeyboardButton(
-				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
-			),
-			InlineKeyboardButton('🔙 Previous menu', callback_data='RESULTS'),
+			InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'),
+			InlineKeyboardButton('🔙 Back', callback_data='RESULTS'),
 		]
 	]
 )
@@ -129,13 +111,35 @@ SHOW_MONTHLY_RESULTS = InlineKeyboardMarkup(
 
 RESULTS = InlineKeyboardMarkup(
 	[
-		[InlineKeyboardButton('📅 January 2025', callback_data='JANUARY_2025')],
-		[InlineKeyboardButton('📅 February 2025', callback_data='FEBRUARY_2025')],
-		[InlineKeyboardButton('📅 November 2024', callback_data='NOVEMBER_2024')],
 		[
-			InlineKeyboardButton(
-				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
-			)
+			InlineKeyboardButton('📅 February 2025', callback_data='FEBRUARY_2025'),
+			InlineKeyboardButton('📅 January 2025', callback_data='JANUARY_2025'),
 		],
+		[
+			InlineKeyboardButton('📅 November 2024', callback_data='NOVEMBER_2024'),
+			InlineKeyboardButton('📅 October 2024', callback_data='OCTOBER_2024'),
+		],
+		[
+			InlineKeyboardButton('📅 September 2024', callback_data='SEPTEMBER_2024'),
+			InlineKeyboardButton('📅 July 2024', callback_data='JULY_2024'),
+		],
+		[
+			InlineKeyboardButton('📅 May 2024', callback_data='MAY_2024'),
+			InlineKeyboardButton('📅 March 2024', callback_data='MARCH_2024'),
+		],
+		[
+			InlineKeyboardButton('📅 January 2024', callback_data='JANUARY_2024'),
+			InlineKeyboardButton('📅 December 2023', callback_data='DECEMBER_2023'),
+		],
+		[
+			InlineKeyboardButton('📅 November 2023', callback_data='NOVEMBER_2023'),
+			InlineKeyboardButton('📅 October 2023', callback_data='OCTOBER_2023'),
+		],
+		[InlineKeyboardButton('📅 July 2023', callback_data='JULY_2023')],
+		[InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU')],
 	]
+)
+
+EMPTY_KEYBOARD = InlineKeyboardMarkup(
+	[[InlineKeyboardButton('EMPTY', callback_data='EMPTY')]]
 )

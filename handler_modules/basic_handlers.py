@@ -148,6 +148,7 @@ async def cancel_operation(update: Update, context: CallbackContext):
 		await update.callback_query.edit_message_text(
 			OPERATION_CANCELED, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
 		)
+		
 
 	# Clear user data and end conversation
 	context.user_data.clear()

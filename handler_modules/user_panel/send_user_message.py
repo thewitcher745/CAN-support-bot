@@ -1,9 +1,10 @@
 import json
-from telegram import Update
+from telegram import MessageId, Update
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from utils import fixed_keyboards
+from utils.strings import MONTHLY_RESULTS_END
 from utils.utilities import get_chat_id, get_user_panel_message_id
 from dotenv import dotenv_values
 
@@ -53,15 +54,53 @@ async def send_user_message(update: Update, context: CallbackContext):
 	else:
 		keyboard = fixed_keyboards.RETURN_TO_MAIN_MENU
 
-	# Send the message to the user
-	await context.bot.copy_message(
-		from_chat_id=user_panel_messages_channel_id,
-		message_id=message_id,
-		chat_id=user_id,
-		reply_markup=keyboard,
-	)
+	try:
+		# If the message_id indicated in the user_panel_message_ids.json file is a dict, it means that it's an album.
+		if isinstance(message_id, dict):
+			message_ids = list(
+				range(
+					message_id['FIRST_ID'],
+					message_id['FIRST_ID'] + message_id['ALBUM_LENGTH'],
+				)
+			)
 
-	await update.callback_query.delete_message()
+			sent_message_ids: tuple[MessageId] = await context.bot.copy_messages(
+				from_chat_id=user_panel_messages_channel_id,
+				message_ids=message_ids,
+				chat_id=user_id,
+			)
+
+			print(sent_message_ids[0].message_id)
+
+			await context.bot.send_message(
+				chat_id=user_id,
+				text=MONTHLY_RESULTS_END,
+				reply_markup=keyboard,
+			)
+
+			await update.callback_query.delete_message()
+
+		# Otherwise, it's a single message, either a single photo or a pure text message.
+		else:
+			await context.bot.copy_message(
+				from_chat_id=user_panel_messages_channel_id,
+				message_id=message_id,
+				chat_id=user_id,
+				reply_markup=keyboard,
+			)
+
+			await update.callback_query.delete_message()
+
+	# This except block happens when there is a text-only message sent after a post containing photos
+	except BadRequest:
+		await context.bot.copy_message(
+			from_chat_id=user_panel_messages_channel_id,
+			message_id=message_id,
+			chat_id=user_id,
+			reply_markup=keyboard,
+		)
+
+		await update.callback_query.delete_message()
 
 	await update.callback_query.answer()
 

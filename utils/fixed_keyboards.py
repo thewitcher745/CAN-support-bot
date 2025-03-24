@@ -27,7 +27,7 @@ RETURN_TO_MAIN_MENU = InlineKeyboardMarkup(
 	[
 		[
 			InlineKeyboardButton(
-				'🔙 Return to main menu', callback_data='RETURN_TO_MAIN_MENU'
+				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
 			)
 		]
 	]
@@ -68,36 +68,73 @@ ADMIN_PANEL_MAIN = InlineKeyboardMarkup(
 
 USER_PANEL_MAIN = InlineKeyboardMarkup(
 	[
-		[InlineKeyboardButton('💰 CAN VIP offers', callback_data='VIP_OFFERS')],
+		[InlineKeyboardButton('💰 CAN VIP offers', callback_data='OFFERS')],
 		[InlineKeyboardButton('📈 CAN VIP results', callback_data='RESULTS')],
 		[InlineKeyboardButton('📞 Contact admin', url='https://t.me/CANSupport')],
 	]
 )
 
-VIP_OFFERS = InlineKeyboardMarkup(
+OFFERS = InlineKeyboardMarkup(
 	[
 		[
 			InlineKeyboardButton(
-				'💰 Get our wallet address', callback_data='WALLET_ADDRESS'
+				'💰 Get our wallet address', callback_data='SELECT_WALLET_ADDRESS'
 			)
 		],
 		[
 			InlineKeyboardButton(
-				'🔙 Return to main menu', callback_data='RETURN_TO_MAIN_MENU'
+				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
 			)
 		],
 	]
 )
 
+SELECT_WALLET_ADDRESS = InlineKeyboardMarkup(
+	[
+		[InlineKeyboardButton('💰 USDT TRC20', callback_data='WALLET_TRC20')],
+		[InlineKeyboardButton('💰 USDT BEP20', callback_data='WALLET_BEP20')],
+		[
+			InlineKeyboardButton(
+				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
+			),
+			InlineKeyboardButton('🔙 Previous menu', callback_data='OFFERS'),
+		],
+	]
+)
 
-MONTHLY_RESULTS = InlineKeyboardMarkup(
+SHOW_WALLET_ADDRESS = InlineKeyboardMarkup(
+	[
+		[
+			InlineKeyboardButton(
+				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
+			),
+			InlineKeyboardButton(
+				'🔙 Previous menu', callback_data='SELECT_WALLET_ADDRESS'
+			),
+		]
+	]
+)
+
+SHOW_MONTHLY_RESULTS = InlineKeyboardMarkup(
+	[
+		[
+			InlineKeyboardButton(
+				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
+			),
+			InlineKeyboardButton('🔙 Previous menu', callback_data='RESULTS'),
+		]
+	]
+)
+
+
+RESULTS = InlineKeyboardMarkup(
 	[
 		[InlineKeyboardButton('📅 January 2025', callback_data='JANUARY_2025')],
 		[InlineKeyboardButton('📅 February 2025', callback_data='FEBRUARY_2025')],
-		[InlineKeyboardButton('📅 March 2025', callback_data='MARCH_2025')],
+		[InlineKeyboardButton('📅 November 2024', callback_data='NOVEMBER_2024')],
 		[
 			InlineKeyboardButton(
-				'🔙 Return to main menu', callback_data='RETURN_TO_MAIN_MENU'
+				'🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU'
 			)
 		],
 	]

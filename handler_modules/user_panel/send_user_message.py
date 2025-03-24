@@ -1,10 +1,27 @@
 import json
 from telegram import Update
+from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from utils import fixed_keyboards
 from utils.utilities import get_chat_id, get_user_panel_message_id
 from dotenv import dotenv_values
+
+
+MONTH_NAMES = [
+	'JANUARY',
+	'FEBRUARY',
+	'MARCH',
+	'APRIL',
+	'MAY',
+	'JUNE',
+	'JULY',
+	'AUGUST',
+	'SEPTEMBER',
+	'OCTOBER',
+	'NOVEMBER',
+	'DECEMBER',
+]
 
 
 async def send_user_message(update: Update, context: CallbackContext):
@@ -19,12 +36,24 @@ async def send_user_message(update: Update, context: CallbackContext):
 
 	# Keyboard is different for different states
 	if update.callback_query.data == 'RESULTS':
-		keyboard = fixed_keyboards.MONTHLY_RESULTS
-	elif update.callback_query.data == 'VIP_OFFERS':
-		keyboard = fixed_keyboards.VIP_OFFERS
+		keyboard = fixed_keyboards.RESULTS
+	elif update.callback_query.data == 'OFFERS':
+		keyboard = fixed_keyboards.OFFERS
+	elif update.callback_query.data == 'SELECT_WALLET_ADDRESS':
+		keyboard = fixed_keyboards.SELECT_WALLET_ADDRESS
+
+	# If the user pressed a wallet address button
+	elif update.callback_query.data.startswith('WALLET_'):
+		keyboard = fixed_keyboards.SHOW_WALLET_ADDRESS
+
+	# If the user pressed a monthly results button
+	elif any(month in update.callback_query.data for month in MONTH_NAMES):
+		keyboard = fixed_keyboards.SHOW_MONTHLY_RESULTS
+
 	else:
 		keyboard = fixed_keyboards.RETURN_TO_MAIN_MENU
 
+	# Send the message to the user
 	await context.bot.copy_message(
 		from_chat_id=user_panel_messages_channel_id,
 		message_id=message_id,

@@ -122,7 +122,6 @@ async def show_help(update: Update, context: CallbackContext):
 		)
 
 
-@handle_telegram_errors
 async def cancel_operation(update: Update, context: CallbackContext):
 	"""
 	Cancel the current operation and return to main menu.
@@ -144,7 +143,7 @@ async def cancel_operation(update: Update, context: CallbackContext):
 			OPERATION_CANCELED,
 			reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
 		)
-	except BadRequest:
+	except (BadRequest, AttributeError):
 		# Handle as callback query if message update fails
 		await update.callback_query.edit_message_text(
 			OPERATION_CANCELED, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU

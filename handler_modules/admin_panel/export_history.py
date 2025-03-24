@@ -55,6 +55,23 @@ async def export_history(update: Update, context: CallbackContext):
 			'categories',
 		]
 
+		# Get all possible categories from all users
+		all_categories = set()
+		for entry in user_history:
+			categories = get_categories_for_user(entry.get('user_id', ''))
+			all_categories.update(categories)
+
+		# Update fieldnames to include individual category columns
+		base_fields = [
+			'user_id',
+			'first_name', 
+			'last_name',
+			'language',
+			'username',
+			'start_time'
+		]
+		fieldnames = base_fields + sorted(list(all_categories))
+
 		with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
 			writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 			writer.writeheader()
@@ -66,18 +83,21 @@ async def export_history(update: Update, context: CallbackContext):
 					entry.get('user_id', '')
 				)
 
-				# Write user data to CSV
-				writer.writerow(
-					{
-						'user_id': entry.get('user_id', ''),
-						'first_name': entry.get('first_name', ''),
-						'last_name': entry.get('last_name', ''),
-						'language': entry.get('language', ''),
-						'username': entry.get('username', ''),
-						'start_time': entry.get('start_time', ''),
-						'categories': ' | '.join(categories_containing_user),
-					}
-				)
+				# Create row dict with base user data
+				row = {
+					'user_id': entry.get('user_id', ''),
+					'first_name': entry.get('first_name', ''),
+					'last_name': entry.get('last_name', ''),
+					'language': entry.get('language', ''),
+					'username': entry.get('username', ''),
+					'start_time': entry.get('start_time', '')
+				}
+
+				# Add category columns with 1/0 values
+				for category in all_categories:
+					row[category] = 1 if category in categories_containing_user else 0
+
+				writer.writerow(row)
 
 		# Send CSV file to admin
 		with open(csv_path, 'rb') as file:

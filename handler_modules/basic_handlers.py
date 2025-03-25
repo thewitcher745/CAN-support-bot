@@ -109,17 +109,19 @@ async def show_help(update: Update, context: CallbackContext):
 	chat_id = get_chat_id(update)
 	update_type = get_update_type(update)
 
-	help_message = ADMIN_HELP if is_user_admin(chat_id) else USER_HELP
-
-	if update_type == 'MESSAGE':
-		await update.message.reply_text(
-			help_message, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
-		)
+	if is_user_admin(chat_id):
+		if update_type == 'MESSAGE':
+			await update.message.reply_text(
+				ADMIN_HELP, reply_markup=keyboards.RETURN_TO_MAIN_MENU
+			)
+		else:
+			await update.callback_query.answer()
+			await update.callback_query.edit_message_text(
+				ADMIN_HELP, reply_markup=keyboards.RETURN_TO_MAIN_MENU
+			)
 	else:
-		await update.callback_query.answer()
-		await update.callback_query.edit_message_text(
-			help_message, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
-		)
+		if update_type == 'CALLBACK_QUERY':
+			await update.callback_query.answer()
 
 
 async def cancel_operation(update: Update, context: CallbackContext):

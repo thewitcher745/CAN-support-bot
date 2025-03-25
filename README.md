@@ -15,6 +15,8 @@ lists for bulk messaging and managing user categories through an admin panel.
 - Automatic user registration tracking
 - Fallback to sending messages back to the sender
 - Error handling for invalid user IDs or permission issues
+- Multi-language support (English and Turkish)
+- Language setting configurable via --locale runtime argument
 
 ## Prerequisites
 
@@ -44,24 +46,36 @@ lists for bulk messaging and managing user categories through an admin panel.
    Create `data/admins.json`:
    ```json
    {
-     "admins": [
-       admin_id_1,
-       admin_id_2
-     ]
+     "admins": {
+       "EN": [admin_id_1, admin_id_2],
+       "TR": [admin_id_1, admin_id_2]
+     }
    }
    ```
 
    Create `data/user_lists.json` with the desired categories (the 'INTERESTED' category is required):
    ```json
    {
+     "EN": {
        "0": {
-           "label": "INTERESTED",
-           "users": []
+         "label": "INTERESTED",
+         "users": []
        },
        "1": {
-           "label": "VIP",
-           "users": []
+         "label": "VIP",
+         "users": []
        }
+     },
+     "TR": {
+       "0": {
+         "label": "İLGİLENEN",
+         "users": []
+       },
+       "1": {
+         "label": "VIP",
+         "users": []
+       }
+     }
    }
    ```
 
@@ -69,9 +83,10 @@ lists for bulk messaging and managing user categories through an admin panel.
 
 ## Usage
 
-1. Start the bot:
+1. Start the bot with desired locale (Defaults to EN if not provided):
    ```bash
-   python main.py
+   python main.py --locale EN  # For English
+   python main.py --locale TR  # For Turkish
    ```
 
 2. In Telegram, start a conversation with your bot by sending the `/start` command.
@@ -79,7 +94,6 @@ lists for bulk messaging and managing user categories through an admin panel.
 3. Available commands:
    - `/start` - Start the bot and access main menu
    - `/help` - View guide on using the bot
-   - `/send <user_id>` - Send or forward a message to a user ID
    - `/bulksend` - Send a message to all users in a selected category (admin only)
    - `/setcategory` - Assign users to a category (admin only)
    - `/addtocategory` - Add users to an existing category (admin only)
@@ -94,6 +108,8 @@ The admin panel provides a keyboard interface for:
 - Exporting user history and categories
 - Viewing the help
 
+Note: The admin panel interface remains in English regardless of the selected language.
+
 ## User Tracking
 
 The bot automatically tracks:
@@ -106,6 +122,14 @@ The bot automatically tracks:
 - Category memberships
 
 This data can be exported to CSV format using the export history feature.
+
+## Language Support
+
+The bot supports two languages:
+- English (EN)
+- Turkish (TR)
+
+The language is set at startup using the --locale argument (e.g., --locale EN or --locale TR) and remains consistent throughout the bot's lifecycle. The user interface (messages, keyboards, etc.) will be displayed in the selected language, while the admin panel remains in English.
 
 ## How to Find a User ID
 

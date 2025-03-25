@@ -75,7 +75,9 @@ OFFERS = InlineKeyboardMarkup(
 				'💰 Get our wallet address', callback_data='SELECT_WALLET_ADDRESS'
 			)
 		],
-		[InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU')],
+		[InlineKeyboardButton('📞 Contact admin', url='https://t.me/CANSupport')][
+			InlineKeyboardButton('🔙 Main menu', callback_data='RETURN_TO_MAIN_MENU')
+		],
 	]
 )
 

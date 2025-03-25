@@ -5,7 +5,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from utils import fixed_keyboards
 from utils.strings import MONTHLY_RESULTS_END
-from utils.utilities import get_chat_id, get_user_panel_message_id
+from utils.utilities import get_chat_id, get_message_labels, get_user_panel_message_id
 from dotenv import dotenv_values
 
 
@@ -106,8 +106,7 @@ async def send_user_message(update: Update, context: CallbackContext):
 
 
 # The pattern for the handler should be all the keys in the user_panel_message_ids.json file
-with open('data/user_panel_message_ids.json', 'r') as f:
-	message_ids = json.load(f)
+message_ids = get_message_labels()
 
 send_user_message_handlers = [
 	CallbackQueryHandler(send_user_message, pattern=message_callback_query_data)

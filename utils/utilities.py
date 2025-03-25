@@ -3,11 +3,35 @@ from functools import wraps
 from telegram import error, Update
 from telegram.ext import ConversationHandler, CallbackContext
 import os
+from utils.config import Config
+
+locale = Config.get_locale().value
+
+
+def get_localized_message_id(message_name: str) -> int:
+	"""
+	Get a message ID based on the current locale and message name.
+
+	Args:
+		message_name: The name of the message to get the ID for
+
+	Returns:
+		The message ID for the current locale
+
+	Raises:
+		KeyError: If the message name doesn't exist for the current locale
+	"""
+	message_ids_file = 'data/user_panel_message_ids.json'
+
+	with open(message_ids_file, 'r', encoding='utf-8') as f:
+		message_ids = json.load(f)
+
+	return message_ids[locale][message_name]
 
 
 def register_user_start(start_message):
 	"""
-	Register a new user in the history JSON file when they first start using the bot.
+	Register a new user in the history JSON file in the correct locale when they first start using the bot.
 
 	Args:
 	    start_message: The message object containing user information from the /start command
@@ -20,7 +44,7 @@ def register_user_start(start_message):
 	# Create the history file if it doesn't exist
 	if not os.path.exists(history_file):
 		with open(history_file, 'w', encoding='utf-8') as f:
-			json.dump([], f, indent=4, ensure_ascii=False)
+			json.dump({'EN': [], 'TR': []}, f, indent=4, ensure_ascii=False)
 
 	# Extract user information from the message
 	user_first_name = start_message.from_user.first_name
@@ -40,15 +64,18 @@ def register_user_start(start_message):
 		'start_time': start_date,
 	}
 
-	# Load existing history or create empty list if file doesn't exist
-	history = []
+	# Load existing history or create empty dict if file doesn't exist
+	history = {'EN': [], 'TR': []}
 	if os.path.exists(history_file):
 		with open(history_file, 'r', encoding='utf-8') as f:
 			history = json.load(f)
 
-	# Add new user if not already present
-	if not any(entry['user_id'] == str(user_id) for entry in history):
-		history.append(new_user)
+	# Add new user if not already present in either locale
+	if not any(entry['user_id'] == str(user_id) for entry in history['EN']) and not any(
+		entry['user_id'] == str(user_id) for entry in history['TR']
+	):
+		# Add to the appropriate locale
+		history[locale].append(new_user)
 
 		# Write updated history back to file
 		with open(history_file, 'w', encoding='utf-8') as f:
@@ -60,11 +87,12 @@ def get_user_lists():
 	Load and return the full user lists from the JSON file.
 
 	Returns:
-	    dict: Dictionary containing all user lists and their metadata
+	    dict: Dictionary containing all user lists and their metadata for the current locale
 	"""
 	with open('data/user_lists.json', 'r') as f:
 		user_lists = json.load(f)
-	return user_lists
+
+	return user_lists[locale]
 
 
 def get_category_id_list():
@@ -107,11 +135,12 @@ def add_user_to_category(user_id, category_id):
 	    user_id: The ID of the user to add
 	    category_id: The ID of the category to add the user to
 	"""
-	user_lists = get_user_lists()
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
 
 	# Only add if user isn't already in the category
-	if user_id not in user_lists[category_id]['users']:
-		user_lists[category_id]['users'].append(user_id)
+	if user_id not in user_lists[locale][category_id]['users']:
+		user_lists[locale][category_id]['users'].append(user_id)
 
 		with open('data/user_lists.json', 'w') as f:
 			json.dump(user_lists, f, indent=4)
@@ -125,11 +154,12 @@ def remove_user_from_category(user_id, category_id):
 	    user_id: The ID of the user to remove
 	    category_id: The ID of the category to remove the user from
 	"""
-	user_lists = get_user_lists()
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
 
 	# Only remove if user is in the category
-	if user_id in user_lists[category_id]['users']:
-		user_lists[category_id]['users'].remove(user_id)
+	if user_id in user_lists[locale][category_id]['users']:
+		user_lists[locale][category_id]['users'].remove(user_id)
 
 		with open('data/user_lists.json', 'w') as f:
 			json.dump(user_lists, f, indent=4)
@@ -171,8 +201,10 @@ def set_category_user_list(category_id, user_list):
 	    category_id: The ID of the category to update
 	    user_list: The new list of users
 	"""
-	user_lists = get_user_lists()
-	user_lists[category_id]['users'] = user_list
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
+
+	user_lists[locale][category_id]['users'] = user_list
 
 	with open('data/user_lists.json', 'w') as f:
 		json.dump(user_lists, f, indent=4)
@@ -186,12 +218,13 @@ def add_user_list_to_category(category_id, user_list):
 	    category_id: The ID of the category to add users to
 	    user_list: List of user IDs to add
 	"""
-	user_lists = get_user_lists()
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
 
 	# Add each user if they're not already in the category
 	for user in user_list:
-		if user not in user_lists[category_id]['users']:
-			user_lists[category_id]['users'].append(user)
+		if user not in user_lists[locale][category_id]['users']:
+			user_lists[locale][category_id]['users'].append(user)
 
 	with open('data/user_lists.json', 'w') as f:
 		json.dump(user_lists, f, indent=4)
@@ -205,12 +238,13 @@ def remove_user_list_from_category(category_id, user_list):
 	    category_id: The ID of the category to remove users from
 	    user_list: List of user IDs to remove
 	"""
-	user_lists = get_user_lists()
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
 
 	# Remove each user if they're in the category
 	for user in user_list:
-		if user in user_lists[category_id]['users']:
-			user_lists[category_id]['users'].remove(user)
+		if user in user_lists[locale][category_id]['users']:
+			user_lists[locale][category_id]['users'].remove(user)
 
 	with open('data/user_lists.json', 'w') as f:
 		json.dump(user_lists, f, indent=4)
@@ -228,7 +262,7 @@ def is_user_admin(user_id):
 	"""
 	with open('data/admins.json', 'r') as f:
 		admins = json.load(f)
-	return user_id in admins['admins']
+	return user_id in admins[locale]
 
 
 def admin_required(func):
@@ -284,7 +318,8 @@ def get_user_panel_message_id(message_name):
 	"""
 	with open('data/user_panel_message_ids.json', 'r') as f:
 		message_ids = json.load(f)
-	return message_ids[message_name]
+
+	return message_ids[locale][message_name]
 
 
 def get_update_type(update):
@@ -303,6 +338,17 @@ def get_update_type(update):
 	except AttributeError:
 		return 'CALLBACK_QUERY'
 
+def get_message_labels():
+	"""
+	Get the labels for all messages in the user panel.
+
+	Returns:
+	    dict: Dictionary containing all message labels
+	"""
+	with open('data/user_panel_message_ids.json', 'r') as f:
+		message_ids = json.load(f)
+
+	return message_ids[locale]
 
 def handle_telegram_errors(func):
 	"""

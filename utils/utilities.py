@@ -1,11 +1,32 @@
 import json
 from functools import wraps
+from dotenv import dotenv_values
 from telegram import error, Update
 from telegram.ext import ConversationHandler, CallbackContext
 import os
 from utils.config import Config
 
 locale = Config.get_locale().value
+
+
+def get_bot_token() -> str:
+	"""
+	Get the appropriate bot token based on the current locale.
+
+	Returns:
+	    str: The bot token for the current locale
+
+	Raises:
+	    ValueError: If the token for the current locale is not found
+	"""
+	# Load environment variables
+	env_vars = dotenv_values('.env.secret')
+
+	token_key = f'BOT_TOKEN_{locale}'
+	if token_key not in env_vars:
+		raise ValueError(f'Bot token for locale {locale} not found in .env.secret')
+	
+	return env_vars[token_key]
 
 
 def get_localized_message_id(message_name: str) -> int:
@@ -338,6 +359,7 @@ def get_update_type(update):
 	except AttributeError:
 		return 'CALLBACK_QUERY'
 
+
 def get_message_labels():
 	"""
 	Get the labels for all messages in the user panel.
@@ -349,6 +371,7 @@ def get_message_labels():
 		message_ids = json.load(f)
 
 	return message_ids[locale]
+
 
 def handle_telegram_errors(func):
 	"""

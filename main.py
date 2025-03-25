@@ -16,6 +16,7 @@ from handler_modules.admin_panel import (
 	export_history,
 )
 from handler_modules.user_panel import send_user_message
+from utils.utilities import get_bot_token
 
 # Enable logging
 logging.basicConfig(
@@ -24,13 +25,13 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-# Replace with your bot token from BotFather
-TOKEN = dotenv_values('.env.secret')['BOT_TOKEN']
-
 
 def main():
+	# Get the appropriate bot token based on locale
+	token = get_bot_token()
+
 	application = (
-		Application.builder().token(TOKEN).read_timeout(30).write_timeout(30).build()
+		Application.builder().token(token).read_timeout(30).write_timeout(30).build()
 	)
 
 	# Start/Main menu

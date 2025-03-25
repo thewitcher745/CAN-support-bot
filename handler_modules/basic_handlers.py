@@ -112,12 +112,12 @@ async def show_help(update: Update, context: CallbackContext):
 	if is_user_admin(chat_id):
 		if update_type == 'MESSAGE':
 			await update.message.reply_text(
-				ADMIN_HELP, reply_markup=keyboards.RETURN_TO_MAIN_MENU
+				ADMIN_HELP, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
 			)
 		else:
 			await update.callback_query.answer()
 			await update.callback_query.edit_message_text(
-				ADMIN_HELP, reply_markup=keyboards.RETURN_TO_MAIN_MENU
+				ADMIN_HELP, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
 			)
 	else:
 		if update_type == 'CALLBACK_QUERY':

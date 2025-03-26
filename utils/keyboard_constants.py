@@ -259,13 +259,6 @@ TR_KEYBOARDS = {
 	'CANCEL_OPERATION': InlineKeyboardMarkup(
 		[[InlineKeyboardButton(TR_BUTTONS['CANCEL'], callback_data='CANCEL')]]
 	),
-	'CATEGORIES': InlineKeyboardMarkup(
-		[
-			[InlineKeyboardButton(user_category_label, callback_data=user_category_id)]
-			for user_category_id, user_category_label in get_category_id_list()
-		]
-		+ [[InlineKeyboardButton(TR_BUTTONS['CANCEL'], callback_data='CANCEL')]]
-	),
 	'RETURN_TO_MAIN_MENU': InlineKeyboardMarkup(
 		[
 			[

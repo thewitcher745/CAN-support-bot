@@ -89,7 +89,7 @@ async def get_message_from_user_update(update: Update, context: CallbackContext)
 	    int: ConversationHandler.END if an error occurs
 	"""
 	await update.callback_query.edit_message_text(
-		BULK_SEND_PROMPT, reply_markup=fixed_keyboards.CANCEL_OPERATION
+		BULK_SEND_PROMPT, reply_markup=fixed_keyboards.ADMIN_CANCEL_OPERATION
 	)
 	return 'SET_MESSAGE_ID'
 
@@ -153,7 +153,7 @@ async def get_category_id(update: Update, context: CallbackContext):
 	# Prompt for confirmation before sending to multiple users
 	await update.callback_query.edit_message_text(
 		BULK_SEND_CATEGORY_SELECTED.format(category=category_label, count=user_count),
-		reply_markup=fixed_keyboards.CONFIRMATION,
+		reply_markup=fixed_keyboards.ADMIN_CONFIRMATION,
 	)
 
 	return 'CONFIRM_BULK_SEND'
@@ -208,7 +208,7 @@ async def confirm(update: Update, context: CallbackContext):
 	# Show success message and return to main menu
 	await update.callback_query.edit_message_text(
 		BULK_SEND_SUCCESS.format(category=category_label),
-		reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+		reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 	)
 
 	context.user_data.clear()

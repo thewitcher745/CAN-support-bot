@@ -38,7 +38,6 @@ EN_BUTTONS = {
 	'YES': '✅ Yes',
 	'NO': '❌ Cancel',
 	'CANCEL': '❌ Cancel',
-	'EMPTY': 'EMPTY',
 }
 
 TR_BUTTONS = {
@@ -71,7 +70,6 @@ TR_BUTTONS = {
 	'YES': '✅ Evet',
 	'NO': '❌ İptal',
 	'CANCEL': '❌ İptal',
-	'EMPTY': 'EMPTY',
 }
 
 # Admin Buttons (English-only)
@@ -87,7 +85,7 @@ ADMIN_BUTTONS = {
 	'YES': '✅ Yes',
 	'NO': '❌ Cancel',
 	'CANCEL': '❌ Cancel',
-	'EMPTY': 'EMPTY',
+	'MAIN_MENU': '🔙 Main menu',  # Added for admin panel
 }
 
 # User Keyboards (Localized)
@@ -247,9 +245,6 @@ EN_KEYBOARDS = {
 			],
 		]
 	),
-	'EMPTY_KEYBOARD': InlineKeyboardMarkup(
-		[[InlineKeyboardButton(EN_BUTTONS['EMPTY'], callback_data='EMPTY')]]
-	),
 }
 
 TR_KEYBOARDS = {
@@ -408,9 +403,6 @@ TR_KEYBOARDS = {
 			],
 		]
 	),
-	'EMPTY_KEYBOARD': InlineKeyboardMarkup(
-		[[InlineKeyboardButton(TR_BUTTONS['EMPTY'], callback_data='EMPTY')]]
-	),
 }
 
 # Admin Keyboards (English-only)
@@ -450,5 +442,26 @@ ADMIN_KEYBOARDS = {
 				)
 			],
 		]
-	)
+	),
+	# Add common admin keyboards
+	'ADMIN_CONFIRMATION': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(ADMIN_BUTTONS['YES'], callback_data='CONFIRM'),
+				InlineKeyboardButton(ADMIN_BUTTONS['NO'], callback_data='CANCEL'),
+			]
+		]
+	),
+	'ADMIN_CANCEL_OPERATION': InlineKeyboardMarkup(
+		[[InlineKeyboardButton(ADMIN_BUTTONS['CANCEL'], callback_data='CANCEL')]]
+	),
+	'ADMIN_RETURN_TO_MAIN_MENU': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
+					ADMIN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				)
+			]
+		]
+	),
 }

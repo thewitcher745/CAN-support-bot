@@ -40,6 +40,8 @@ async def send_user_message(update: Update, context: CallbackContext):
 		keyboard = fixed_keyboards.RESULTS
 	elif update.callback_query.data == 'OFFERS':
 		keyboard = fixed_keyboards.OFFERS
+	elif update.callback_query.data == 'HOW_IT_WORKS':
+		keyboard = fixed_keyboards.HOW_IT_WORKS
 	elif update.callback_query.data == 'SELECT_WALLET_ADDRESS':
 		keyboard = fixed_keyboards.SELECT_WALLET_ADDRESS
 

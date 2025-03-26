@@ -271,7 +271,7 @@ TR_KEYBOARDS = {
 	'USER_PANEL_MAIN': InlineKeyboardMarkup(
 		[
 			[InlineKeyboardButton(TR_BUTTONS['OFFERS'], callback_data='OFFERS')],
-			[InlineKeyboardButton(TR_BUTTONS['RESULTS'], callback_data='RESULTS')],
+			# [InlineKeyboardButton(TR_BUTTONS['RESULTS'], callback_data='RESULTS')],
 			[
 				InlineKeyboardButton(
 					TR_BUTTONS['CONTACT_ADMIN'], url='https://t.me/Attiladestek'

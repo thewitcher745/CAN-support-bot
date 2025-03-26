@@ -288,7 +288,7 @@ TR_KEYBOARDS = {
 			],
 			[
 				InlineKeyboardButton(
-					TR_BUTTONS['CONTACT_ADMIN'], url='https://t.me/CANSupport'
+					TR_BUTTONS['CONTACT_ADMIN'], url='https://t.me/Attiladestek'
 				)
 			],
 			[

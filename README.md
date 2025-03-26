@@ -53,12 +53,17 @@ lists for bulk messaging and managing user categories through an admin panel.
        "EN": [admin_id_1, admin_id_2],
        "TR": [admin_id_1, admin_id_2]
      }
+     "admins": {
+       "EN": [admin_id_1, admin_id_2],
+       "TR": [admin_id_1, admin_id_2]
+     }
    }
    ```
 
    Create `data/user_lists.json` with the desired categories (the 'INTERESTED' category is required):
    ```json
    {
+     "EN": {
      "EN": {
        "0": {
          "label": "INTERESTED",
@@ -87,7 +92,10 @@ lists for bulk messaging and managing user categories through an admin panel.
 ## Usage
 
 1. Start the bot with desired locale (Defaults to EN if not provided):
+1. Start the bot with desired locale (Defaults to EN if not provided):
    ```bash
+   python main.py --locale EN  # For English
+   python main.py --locale TR  # For Turkish
    python main.py --locale EN  # For English
    python main.py --locale TR  # For Turkish
    ```
@@ -110,6 +118,8 @@ The admin panel provides a keyboard interface for:
 - Sending messages to users in bulk
 - Exporting user history and categories
 - Viewing the help
+
+Note: The admin panel interface remains in English regardless of the selected language.
 
 Note: The admin panel interface remains in English regardless of the selected language.
 

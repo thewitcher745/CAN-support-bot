@@ -14,6 +14,7 @@ from utils.utilities import (
 	get_chat_id,
 	handle_telegram_errors,
 )
+from utils.config import Config
 
 
 @admin_required
@@ -44,6 +45,8 @@ async def export_history(update: Update, context: CallbackContext):
 		with open(history_file, 'r', encoding='utf-8') as f:
 			user_history = json.load(f)
 
+		user_history = user_history[Config.get_locale().value]
+
 		# Define CSV structure and write data
 		fieldnames = [
 			'user_id',
@@ -64,11 +67,11 @@ async def export_history(update: Update, context: CallbackContext):
 		# Update fieldnames to include individual category columns
 		base_fields = [
 			'user_id',
-			'first_name', 
+			'first_name',
 			'last_name',
 			'language',
 			'username',
-			'start_time'
+			'start_time',
 		]
 		fieldnames = base_fields + sorted(list(all_categories))
 
@@ -90,7 +93,7 @@ async def export_history(update: Update, context: CallbackContext):
 					'last_name': entry.get('last_name', ''),
 					'language': entry.get('language', ''),
 					'username': entry.get('username', ''),
-					'start_time': entry.get('start_time', '')
+					'start_time': entry.get('start_time', ''),
 				}
 
 				# Add category columns with 1/0 values

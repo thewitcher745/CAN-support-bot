@@ -25,7 +25,7 @@ def get_bot_token() -> str:
 	token_key = f'BOT_TOKEN_{locale}'
 	if token_key not in env_vars:
 		raise ValueError(f'Bot token for locale {locale} not found in .env.secret')
-	
+
 	return env_vars[token_key]
 
 
@@ -92,8 +92,8 @@ def register_user_start(start_message):
 			history = json.load(f)
 
 	# Add new user if not already present in either locale
-	if not any(entry['user_id'] == str(user_id) for entry in history['EN']) and not any(
-		entry['user_id'] == str(user_id) for entry in history['TR']
+	if len(history[locale]) == 0 or not any(
+		entry['user_id'] == str(user_id) for entry in history[locale]
 	):
 		# Add to the appropriate locale
 		history[locale].append(new_user)

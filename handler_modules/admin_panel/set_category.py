@@ -69,7 +69,7 @@ async def get_user_list_from_user_update(update: Update, context: CallbackContex
 	    str: The next conversation state 'SET_USER_LIST'
 	"""
 	await update.callback_query.edit_message_text(
-		CATEGORY_USER_LIST_PROMPT, reply_markup=fixed_keyboards.CANCEL_OPERATION
+		CATEGORY_USER_LIST_PROMPT, reply_markup=fixed_keyboards.ADMIN_CANCEL_OPERATION
 	)
 	return 'SET_USER_LIST'
 
@@ -120,7 +120,7 @@ async def get_category_id(update: Update, context: CallbackContext):
 	# Show confirmation prompt with category name
 	await update.callback_query.edit_message_text(
 		CATEGORY_CONFIRM_SET.format(category=get_category_label_by_id(category_id)),
-		reply_markup=fixed_keyboards.CONFIRMATION,
+		reply_markup=fixed_keyboards.ADMIN_CONFIRMATION,
 	)
 
 	return 'CONFIRM_SET_CATEGORY'
@@ -158,7 +158,7 @@ async def confirm(update: Update, context: CallbackContext):
 	# Show success message
 	await update.callback_query.edit_message_text(
 		CATEGORY_SET_SUCCESS.format(category=get_category_label_by_id(category_id)),
-		reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+		reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 	)
 
 	# Clean up user data

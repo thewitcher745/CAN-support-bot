@@ -112,7 +112,7 @@ async def export_history(update: Update, context: CallbackContext):
 		await context.bot.send_message(
 			chat_id=chat_id,
 			text='✅ User history has been successfully exported to CSV!',
-			reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+			reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 		)
 
 		# Cleanup temporary CSV file
@@ -125,7 +125,7 @@ async def export_history(update: Update, context: CallbackContext):
 		# Handle any errors during export process
 		await update.callback_query.message.reply_text(
 			EXPORT_HISTORY_ERROR.format(error=str(e)),
-			reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+			reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 		)
 		await update.callback_query.answer()
 

@@ -75,4 +75,5 @@ ADMIN_STRINGS = {
 	'SEND_MESSAGE_PROMPT': '📨 Send the message you want to forward:',
 	'SEND_MESSAGE_SUCCESS': '✅ Message sent successfully to user {user_id}',
 	'SEND_MESSAGE_ERROR': '⚠️ Error sending message: {error}',
+	'ADMIN_OPERATION_CANCELED': '❌ Operation canceled by the user.',
 }

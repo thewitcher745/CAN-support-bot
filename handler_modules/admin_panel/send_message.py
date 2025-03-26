@@ -49,12 +49,12 @@ async def get_message_from_reply(update: Update, context: CallbackContext):
 			)
 			await update.message.reply_text(
 				SEND_MESSAGE_SUCCESS.format(user_id=target_user_id),
-				reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+				reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 			)
 		except Exception as e:
 			await update.message.reply_text(
 				SEND_MESSAGE_ERROR.format(error=str(e)),
-				reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+				reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 			)
 
 		return ConversationHandler.END
@@ -78,7 +78,7 @@ async def get_message_from_user_update(update: Update, context: CallbackContext)
 	    str: The next conversation state 'SET_MESSAGE_ID'
 	"""
 	await update.callback_query.edit_message_text(
-		SEND_MESSAGE_PROMPT, reply_markup=fixed_keyboards.CANCEL_OPERATION
+		SEND_MESSAGE_PROMPT, reply_markup=fixed_keyboards.ADMIN_CANCEL_OPERATION
 	)
 	return 'SET_MESSAGE_ID'
 
@@ -115,12 +115,12 @@ async def set_message_id(update: Update, context: CallbackContext):
 		)
 		await update.message.reply_text(
 			SEND_MESSAGE_SUCCESS.format(user_id=target_user_id),
-			reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+			reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 		)
 	except Exception as e:
 		await update.message.reply_text(
 			SEND_MESSAGE_ERROR.format(error=str(e)),
-			reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+			reply_markup=fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU,
 		)
 
 	return ConversationHandler.END

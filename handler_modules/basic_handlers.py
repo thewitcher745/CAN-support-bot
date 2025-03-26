@@ -9,8 +9,8 @@ from utils.strings import (
 	USER_WELCOME,
 	USER_WELCOME_BACK,
 	ADMIN_HELP,
-	USER_HELP,
 	OPERATION_CANCELED,
+	ADMIN_OPERATION_CANCELED,
 )
 from utils.utilities import (
 	add_user_to_category,
@@ -138,19 +138,25 @@ async def cancel_operation(update: Update, context: CallbackContext):
 	Returns:
 	    int: ConversationHandler.END to end the conversation
 	"""
+	reply_markup = fixed_keyboards.RETURN_TO_MAIN_MENU
+	message_text = OPERATION_CANCELED
+
+	# If the user is an admin, use the admin return to main menu and operation canceled text
+	if is_user_admin(get_chat_id(update)):
+		reply_markup = fixed_keyboards.ADMIN_RETURN_TO_MAIN_MENU
+		message_text = ADMIN_OPERATION_CANCELED
+
 	try:
 		# Try handling as message update
 		await context.bot.send_message(
-			update.message.chat_id,
-			OPERATION_CANCELED,
-			reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU,
+			update.message.chat_id, message_text, reply_markup=reply_markup
 		)
 	except (BadRequest, AttributeError):
 		# Handle as callback query if message update fails
 		await update.callback_query.edit_message_text(
-			OPERATION_CANCELED, reply_markup=fixed_keyboards.RETURN_TO_MAIN_MENU
+			message_text,
+			reply_markup=reply_markup,
 		)
-		
 
 	# Clear user data and end conversation
 	context.user_data.clear()

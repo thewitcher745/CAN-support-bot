@@ -12,6 +12,7 @@ EN_BUTTONS = {
 	# Main Menu
 	'OFFERS': '💰 CAN VIP offers',
 	'RESULTS': '📈 CAN VIP results',
+	'HOW_IT_WORKS': '🤔 How does CAN VIP work?',
 	'CONTACT_ADMIN': '📞 Contact admin',
 	# Offers Menu
 	'GET_WALLET': '💰 Get our wallet address',
@@ -43,7 +44,8 @@ EN_BUTTONS = {
 TR_BUTTONS = {
 	# Main Menu
 	'OFFERS': '💰 VIP üye',
-	'RESULTS': '📈 VIP sistemimiz nasıl çalışıyor?',
+	'RESULTS': '📈 VIP Sonuçları',
+	'HOW_IT_WORKS': '🤔 VIP sistemimiz nasıl çalışıyor?',
 	'CONTACT_ADMIN': '📞 Destek Konuş',
 	# Offers Menu
 	'GET_WALLET': '💰 Katılmak için bu adresimiz',
@@ -101,13 +103,6 @@ EN_KEYBOARDS = {
 	'CANCEL_OPERATION': InlineKeyboardMarkup(
 		[[InlineKeyboardButton(EN_BUTTONS['CANCEL'], callback_data='CANCEL')]]
 	),
-	'CATEGORIES': InlineKeyboardMarkup(
-		[
-			[InlineKeyboardButton(user_category_label, callback_data=user_category_id)]
-			for user_category_id, user_category_label in get_category_id_list()
-		]
-		+ [[InlineKeyboardButton(EN_BUTTONS['CANCEL'], callback_data='CANCEL')]]
-	),
 	'RETURN_TO_MAIN_MENU': InlineKeyboardMarkup(
 		[
 			[
@@ -120,6 +115,11 @@ EN_KEYBOARDS = {
 	'USER_PANEL_MAIN': InlineKeyboardMarkup(
 		[
 			[InlineKeyboardButton(EN_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['HOW_IT_WORKS'], callback_data='HOW_IT_WORKS'
+				)
+			],
 			[InlineKeyboardButton(EN_BUTTONS['RESULTS'], callback_data='RESULTS')],
 			[
 				InlineKeyboardButton(
@@ -144,6 +144,21 @@ EN_KEYBOARDS = {
 				InlineKeyboardButton(
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
 				)
+			],
+		]
+	),
+	'HOW_IT_WORKS': InlineKeyboardMarkup(
+		[
+			[InlineKeyboardButton(EN_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['CONTACT_ADMIN'], url='https://t.me/CANSupport'
+				)
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
 			],
 		]
 	),
@@ -271,6 +286,11 @@ TR_KEYBOARDS = {
 	'USER_PANEL_MAIN': InlineKeyboardMarkup(
 		[
 			[InlineKeyboardButton(TR_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['HOW_IT_WORKS'], callback_data='HOW_IT_WORKS'
+				)
+			],
 			# [InlineKeyboardButton(TR_BUTTONS['RESULTS'], callback_data='RESULTS')],
 			[
 				InlineKeyboardButton(
@@ -295,6 +315,21 @@ TR_KEYBOARDS = {
 				InlineKeyboardButton(
 					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
 				)
+			],
+		]
+	),
+	'HOW_IT_WORKS': InlineKeyboardMarkup(
+		[
+			[InlineKeyboardButton(TR_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['CONTACT_ADMIN'], url='https://t.me/Attiladestek'
+				)
+			],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
 			],
 		]
 	),

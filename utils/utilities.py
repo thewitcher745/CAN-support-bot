@@ -403,7 +403,8 @@ def handle_telegram_errors(func):
 		except Exception as e:
 			# Handle all other errors
 			await context.bot.send_message(
-				update.effective_chat.id, f'🚨 An error occurred: {str(e)}'
+				update.effective_chat.id,
+				f'🚨 An error occurred during execution of function {func.__name__}: {str(e)}',
 			)
 
 			if get_update_type(update) == 'CALLBACK_QUERY':

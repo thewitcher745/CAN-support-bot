@@ -461,13 +461,11 @@ ADMIN_KEYBOARDS = {
 				InlineKeyboardButton(
 					ADMIN_BUTTONS['ADD_TO_CATEGORY'],
 					callback_data='START_ADD_TO_CATEGORY',
-				)
-			],
-			[
+				),
 				InlineKeyboardButton(
 					ADMIN_BUTTONS['REMOVE_FROM_CATEGORY'],
 					callback_data='START_REMOVE_FROM_CATEGORY',
-				)
+				),
 			],
 			[
 				InlineKeyboardButton(
@@ -499,7 +497,6 @@ ADMIN_KEYBOARDS = {
 			[InlineKeyboardButton(user_category_label, callback_data=user_category_id)]
 			for user_category_id, user_category_label in get_category_id_list()
 		]
-		+ [[InlineKeyboardButton(EN_BUTTONS['CANCEL'], callback_data='CANCEL')]]
 	),
 	# Add common admin keyboards
 	'ADMIN_CONFIRMATION': InlineKeyboardMarkup(

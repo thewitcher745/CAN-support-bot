@@ -45,7 +45,7 @@ ADMIN_STRINGS = {
 /bulksend <user id>: This command sends a message to all users in a category, selected in a dialog after the command is used. 📈
 """,
 	# Bulk Send Messages
-	'BULK_SEND_MESSAGE_SELECTED': '📧 Message selected for bulk sending. Now select the category you wish the message to be sent to.',
+	'BULK_SEND_MESSAGE_SELECTED': '📧 Message selected for bulk sending. Now select the category you wish the message to be sent to.\n\nUse /cancel to cancel the operation.',
 	'BULK_SEND_ERROR_REPLY': '⚠️ Error: The command /bulksend can only be used in reply to a message. Please make sure you reply to a message with the command and try again.',
 	'BULK_SEND_PROMPT': '📨 Send the message you wish to be sent to users in a category.',
 	'BULK_SEND_CATEGORY_SELECTED': '❓ Category {category} selected successfully. Are you sure you want to send the provided message to all {count} users in this category?',
@@ -53,17 +53,17 @@ ADMIN_STRINGS = {
 	'BULK_SEND_SUCCESS': '✅ Message sent to all users in category {category} successfully!',
 	# Category Management Messages
 	'CATEGORY_ERROR_REPLY': "⚠️ You have to use this command in reply to a list of user ID's.",
-	'CATEGORY_SELECT_PROMPT': '📈 Please select a category to set the user list for:',
+	'CATEGORY_SELECT_PROMPT': '📈 Please select a category to set the user list for:\n\nUse /cancel to cancel the operation.',
 	'CATEGORY_USER_LIST_PROMPT': '📋 Send the list of user IDs you want to set for the category.',
 	'CATEGORY_CONFIRM_SET': '❓ Are you sure you want to set the user list for category {category}?',
 	'CATEGORY_SET_SUCCESS': '✅ Category {category} set successfully!',
 	# Add to Category Messages
-	'ADD_TO_CATEGORY_SELECT_PROMPT': '📈 Please select a category to add the user list to:',
+	'ADD_TO_CATEGORY_SELECT_PROMPT': '📈 Please select a category to add the user list to:\n\nUse /cancel to cancel the operation.',
 	'ADD_TO_CATEGORY_USER_LIST_PROMPT': '📋 Send the list of user IDs you want to add to a category.',
 	'ADD_TO_CATEGORY_CONFIRM': '❓ Are you sure you want to add the user list to category {category}?',
 	'ADD_TO_CATEGORY_SUCCESS': '✅ Selected list added to category {category} successfully!',
 	# Remove from Category Messages
-	'REMOVE_FROM_CATEGORY_SELECT_PROMPT': '📈 Please select a category to remove the user list from:',
+	'REMOVE_FROM_CATEGORY_SELECT_PROMPT': '📈 Please select a category to remove the user list from:\n\nUse /cancel to cancel the operation.',
 	'REMOVE_FROM_CATEGORY_USER_LIST_PROMPT': '📋 Send the list of user IDs you want to remove from a category.',
 	'REMOVE_FROM_CATEGORY_CONFIRM': '❓ Are you sure you want to remove the user list from category {category}?',
 	'REMOVE_FROM_CATEGORY_SUCCESS': '✅ Selected list removed from category {category} successfully!',

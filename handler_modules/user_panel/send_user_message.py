@@ -1,11 +1,15 @@
-import json
 from telegram import MessageId, Update
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from utils import fixed_keyboards
 from utils.strings import MONTHLY_RESULTS_END
-from utils.utilities import get_chat_id, get_message_labels, get_user_panel_message_id
+from utils.utilities import (
+	get_chat_id,
+	get_message_labels,
+	get_user_panel_message_id,
+	log_user_panel_errors,
+)
 from dotenv import dotenv_values
 
 
@@ -25,6 +29,7 @@ MONTH_NAMES = [
 ]
 
 
+@log_user_panel_errors
 async def send_user_message(update: Update, context: CallbackContext):
 	"""
 	Send a message to the user pressing the button in the user panel.

@@ -1,5 +1,7 @@
+from datetime import datetime
 import json
 from functools import wraps
+import logging
 from dotenv import dotenv_values
 from telegram import error, Update
 from telegram.ext import ConversationHandler, CallbackContext
@@ -403,5 +405,40 @@ def handle_telegram_errors(func):
 		# Clean up and end conversation on error
 		context.user_data.clear()
 		return ConversationHandler.END
+
+	return wrapper
+
+
+def log_user_panel_errors(func):
+	"""
+	Decorator that logs errors occurring in user panel functions using the logger module.
+	Logs are written to logs/user_panel_errors.log
+
+	Args:
+	    func: The async function to wrap with error logging
+
+	Returns:
+	    wrapper: The wrapped function with error logging
+	"""
+	logger = logging.getLogger(locale)
+	
+	# Create logs directory if it doesn't exist
+	os.makedirs('logs', exist_ok=True)
+	
+	# Configure file handler
+	file_handler = logging.FileHandler(f'logs/user_panel_errors_{locale}.log')
+	file_handler.setFormatter(logging.Formatter(
+		'%(asctime)s - %(levelname)s - %(message)s'
+	))
+	logger.addHandler(file_handler)
+
+	@wraps(func)
+	async def wrapper(update: Update, context: CallbackContext, *args, **kwargs):
+		try:
+			return await func(update, context, *args, **kwargs)
+		except Exception as e:
+			logger.error(
+				f'User panel error occurred in {func.__name__} for user {update.effective_user.id}: {str(e)}'
+			)
 
 	return wrapper

@@ -394,13 +394,20 @@ def handle_telegram_errors(func):
 			# Handle invalid user ID or permission errors
 			await context.bot.send_message(
 				update.effective_chat.id,
-				f'⚠️ Error: User ID might be invalid or bot has no permission: {str(e)}',
+				f'⚠️ Error during execution of function {func.__name__}: {str(e)}',
 			)
+
+			if get_update_type(update) == 'CALLBACK_QUERY':
+				await update.callback_query.answer()
+
 		except Exception as e:
 			# Handle all other errors
 			await context.bot.send_message(
 				update.effective_chat.id, f'🚨 An error occurred: {str(e)}'
 			)
+
+			if get_update_type(update) == 'CALLBACK_QUERY':
+				await update.callback_query.answer()
 
 		# Clean up and end conversation on error
 		context.user_data.clear()
@@ -421,15 +428,15 @@ def log_user_panel_errors(func):
 	    wrapper: The wrapped function with error logging
 	"""
 	logger = logging.getLogger(locale)
-	
+
 	# Create logs directory if it doesn't exist
 	os.makedirs('logs', exist_ok=True)
-	
+
 	# Configure file handler
 	file_handler = logging.FileHandler(f'logs/user_panel_errors_{locale}.log')
-	file_handler.setFormatter(logging.Formatter(
-		'%(asctime)s - %(levelname)s - %(message)s'
-	))
+	file_handler.setFormatter(
+		logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+	)
 	logger.addHandler(file_handler)
 
 	@wraps(func)

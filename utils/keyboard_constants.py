@@ -21,6 +21,7 @@ EN_BUTTONS = {
 	# Wallet Menu
 	'WALLET_TRC20': '💰 USDT TRC20',
 	'WALLET_BEP20': '💰 USDT BEP20',
+	'SEND_PAYMENT_PROOF': '✅ Send payment screenshot',
 	# Results Menu
 	'FEBRUARY_2025': '📅 February 2025',
 	'JANUARY_2025': '📅 January 2025',
@@ -54,6 +55,7 @@ TR_BUTTONS = {
 	# Wallet Menu
 	'WALLET_TRC20': '💰 USDT TRC20 cüzdan',
 	'WALLET_BEP20': '💰 USDT BEP20 cüzdan',
+	'SEND_PAYMENT_PROOF': '✅ Ödemenin fotoğrafını bize gönderin',
 	# Results Menu
 	'FEBRUARY_2025': '📅 February 2025',
 	'JANUARY_2025': '📅 January 2025',
@@ -186,12 +188,17 @@ EN_KEYBOARDS = {
 		[
 			[
 				InlineKeyboardButton(
+					EN_BUTTONS['SEND_PAYMENT_PROOF'], url='https://t.me/CANSupport'
+				)
+			],
+			[
+				InlineKeyboardButton(
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
 				),
 				InlineKeyboardButton(
 					EN_BUTTONS['BACK'], callback_data='SELECT_WALLET_ADDRESS'
 				),
-			]
+			],
 		]
 	),
 	'SHOW_MONTHLY_RESULTS': InlineKeyboardMarkup(
@@ -357,12 +364,17 @@ TR_KEYBOARDS = {
 		[
 			[
 				InlineKeyboardButton(
+					TR_BUTTONS['SEND_PAYMENT_PROOF'], url='https://t.me/Attiladestek'
+				)
+			],
+			[
+				InlineKeyboardButton(
 					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
 				),
 				InlineKeyboardButton(
 					TR_BUTTONS['BACK'], callback_data='SELECT_WALLET_ADDRESS'
 				),
-			]
+			],
 		]
 	),
 	'SHOW_MONTHLY_RESULTS': InlineKeyboardMarkup(

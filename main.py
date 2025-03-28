@@ -14,6 +14,8 @@ from handler_modules.admin_panel import (
 	send_message,
 	remove_from_category,
 	export_history,
+	send_user_logs,
+	clear_user_logs,
 )
 from handler_modules.user_panel import send_user_message
 from utils.utilities import get_bot_token
@@ -55,6 +57,8 @@ def main():
 	application.add_handler(add_to_category.add_to_category_handler)
 	application.add_handler(remove_from_category.remove_from_category_handler)
 	application.add_handler(export_history.export_history_handler)
+	application.add_handler(send_user_logs.send_user_logs_handler)
+	application.add_handler(clear_user_logs.clear_user_logs_handler)
 
 	# User panel handlers are multiple handlers, so we need to add them all
 	for handler in send_user_message.send_user_message_handlers:

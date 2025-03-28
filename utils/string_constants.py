@@ -76,4 +76,12 @@ ADMIN_STRINGS = {
 	'SEND_MESSAGE_SUCCESS': '✅ Message sent successfully to user {user_id}',
 	'SEND_MESSAGE_ERROR': '⚠️ Error sending message: {error}',
 	'ADMIN_OPERATION_CANCELED': '❌ Operation canceled by the user.',
+	# User Panel Logs Messages
+	'SEND_USER_LOGS_SUCCESS': '✅ User panel logs sent successfully!',
+	'SEND_USER_LOGS_ERROR': '⚠️ Error sending user panel logs: {error}',
+	'SEND_USER_LOGS_NO_FILE': '⚠️ No user panel logs found for the current locale.',
+	# Clear User Logs Messages
+	'CLEAR_USER_LOGS_CONFIRM': '❓ Are you sure you want to clear the user panel logs for the current locale ({locale})?',
+	'CLEAR_USER_LOGS_SUCCESS': '✅ User panel logs cleared successfully!',
+	'CLEAR_USER_LOGS_NO_FILE': '⚠️ No user panel logs found to clear for the current locale.',
 }

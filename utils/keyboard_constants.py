@@ -84,6 +84,9 @@ ADMIN_BUTTONS = {
 	'REMOVE_FROM_CATEGORY': '➖ Remove from category list',
 	'BULK_SEND': '📨 Bulk message to category',
 	'EXPORT_HISTORY': '📊 Export user history',
+	'EXPORT_LOGS': '📝 Export logs',
+	'SEND_USER_LOGS': '📋 Send user panel logs',
+	'CLEAR_USER_LOGS': '🗑️ Clear user panel logs',
 	'SHOW_HELP': '❓ Show help',
 	# Common Buttons
 	'YES': '✅ Yes',
@@ -475,6 +478,14 @@ ADMIN_KEYBOARDS = {
 				InlineKeyboardButton(
 					ADMIN_BUTTONS['EXPORT_HISTORY'], callback_data='EXPORT_HISTORY'
 				)
+			],
+			[
+				InlineKeyboardButton(
+					ADMIN_BUTTONS['SEND_USER_LOGS'], callback_data='SEND_USER_LOGS'
+				),
+				InlineKeyboardButton(
+					ADMIN_BUTTONS['CLEAR_USER_LOGS'], callback_data='CLEAR_USER_LOGS'
+				),
 			],
 			[
 				InlineKeyboardButton(

@@ -8,8 +8,7 @@ from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from utils.utilities import get_category_id_list
 
 # User Buttons (Localized)
-EN_BUTTONS = {
-	# Main Menu
+EN_BUTTONS = {  # Main Menu
 	'OFFERS': '💰 CAN VIP offers',
 	'RESULTS': '📈 CAN VIP results',
 	'HOW_IT_WORKS': '🤔 How does CAN VIP work?',
@@ -25,16 +24,23 @@ EN_BUTTONS = {
 	# Results Menu
 	'FEBRUARY_2025': '📅 February 2025',
 	'JANUARY_2025': '📅 January 2025',
+	'DECEMBER_2024': '📅 December 2024',
 	'NOVEMBER_2024': '📅 November 2024',
 	'OCTOBER_2024': '📅 October 2024',
 	'SEPTEMBER_2024': '📅 September 2024',
+	'AUGUST_2024': '📅 August 2024',
 	'JULY_2024': '📅 July 2024',
+	'JUNE_2024': '📅 June 2024',
 	'MAY_2024': '📅 May 2024',
+	'APRIL_2024': '📅 April 2024',
 	'MARCH_2024': '📅 March 2024',
+	'FEBRUARY_2024': '📅 February 2024',
 	'JANUARY_2024': '📅 January 2024',
 	'DECEMBER_2023': '📅 December 2023',
 	'NOVEMBER_2023': '📅 November 2023',
 	'OCTOBER_2023': '📅 October 2023',
+	'SEPTEMBER_2023': '📅 September 2023',
+	'AUGUST_2023': '📅 August 2023',
 	'JULY_2023': '📅 July 2023',
 	# Common Buttons
 	'YES': '✅ Yes',
@@ -57,19 +63,7 @@ TR_BUTTONS = {
 	'WALLET_BEP20': '💰 USDT BEP20 cüzdan',
 	'SEND_PAYMENT_PROOF': '✅ Ödemenin fotoğrafını bize gönderin',
 	# Results Menu
-	'FEBRUARY_2025': '📅 February 2025',
-	'JANUARY_2025': '📅 January 2025',
-	'NOVEMBER_2024': '📅 November 2024',
-	'OCTOBER_2024': '📅 October 2024',
-	'SEPTEMBER_2024': '📅 September 2024',
-	'JULY_2024': '📅 July 2024',
-	'MAY_2024': '📅 May 2024',
-	'MARCH_2024': '📅 March 2024',
-	'JANUARY_2024': '📅 January 2024',
-	'DECEMBER_2023': '📅 December 2023',
-	'NOVEMBER_2023': '📅 November 2023',
-	'OCTOBER_2023': '📅 October 2023',
-	'JULY_2023': '📅 July 2023',
+	'MARCH_2025': '📅 Mart 2025',
 	# Common Buttons
 	'YES': '✅ Evet',
 	'NO': '❌ İptal',
@@ -226,43 +220,74 @@ EN_KEYBOARDS = {
 			],
 			[
 				InlineKeyboardButton(
-					EN_BUTTONS['NOVEMBER_2024'], callback_data='NOVEMBER_2024'
+					EN_BUTTONS['DECEMBER_2024'], callback_data='DECEMBER_2024'
 				),
 				InlineKeyboardButton(
-					EN_BUTTONS['OCTOBER_2024'], callback_data='OCTOBER_2024'
+					EN_BUTTONS['NOVEMBER_2024'], callback_data='NOVEMBER_2024'
 				),
 			],
 			[
 				InlineKeyboardButton(
+					EN_BUTTONS['OCTOBER_2024'], callback_data='OCTOBER_2024'
+				),
+				InlineKeyboardButton(
 					EN_BUTTONS['SEPTEMBER_2024'], callback_data='SEPTEMBER_2024'
+				),
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['AUGUST_2024'], callback_data='AUGUST_2024'
 				),
 				InlineKeyboardButton(
 					EN_BUTTONS['JULY_2024'], callback_data='JULY_2024'
 				),
 			],
 			[
+				InlineKeyboardButton(
+					EN_BUTTONS['JUNE_2024'], callback_data='JUNE_2024'
+				),
 				InlineKeyboardButton(EN_BUTTONS['MAY_2024'], callback_data='MAY_2024'),
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['APRIL_2024'], callback_data='APRIL_2024'
+				),
 				InlineKeyboardButton(
 					EN_BUTTONS['MARCH_2024'], callback_data='MARCH_2024'
 				),
 			],
 			[
 				InlineKeyboardButton(
-					EN_BUTTONS['JANUARY_2024'], callback_data='JANUARY_2024'
+					EN_BUTTONS['FEBRUARY_2024'], callback_data='FEBRUARY_2024'
 				),
 				InlineKeyboardButton(
-					EN_BUTTONS['DECEMBER_2023'], callback_data='DECEMBER_2023'
+					EN_BUTTONS['JANUARY_2024'], callback_data='JANUARY_2024'
 				),
 			],
 			[
 				InlineKeyboardButton(
+					EN_BUTTONS['DECEMBER_2023'], callback_data='DECEMBER_2023'
+				),
+				InlineKeyboardButton(
 					EN_BUTTONS['NOVEMBER_2023'], callback_data='NOVEMBER_2023'
 				),
+			],
+			[
 				InlineKeyboardButton(
 					EN_BUTTONS['OCTOBER_2023'], callback_data='OCTOBER_2023'
 				),
+				InlineKeyboardButton(
+					EN_BUTTONS['SEPTEMBER_2023'], callback_data='SEPTEMBER_2023'
+				),
 			],
-			[InlineKeyboardButton(EN_BUTTONS['JULY_2023'], callback_data='JULY_2023')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['AUGUST_2023'], callback_data='AUGUST_2023'
+				),
+				InlineKeyboardButton(
+					EN_BUTTONS['JULY_2023'], callback_data='JULY_2023'
+				),
+			],
 			[
 				InlineKeyboardButton(
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
@@ -394,55 +419,8 @@ TR_KEYBOARDS = {
 		[
 			[
 				InlineKeyboardButton(
-					TR_BUTTONS['FEBRUARY_2025'], callback_data='FEBRUARY_2025'
+					TR_BUTTONS['MARCH_2025'], callback_data='MARCH_2025'
 				),
-				InlineKeyboardButton(
-					TR_BUTTONS['JANUARY_2025'], callback_data='JANUARY_2025'
-				),
-			],
-			[
-				InlineKeyboardButton(
-					TR_BUTTONS['NOVEMBER_2024'], callback_data='NOVEMBER_2024'
-				),
-				InlineKeyboardButton(
-					TR_BUTTONS['OCTOBER_2024'], callback_data='OCTOBER_2024'
-				),
-			],
-			[
-				InlineKeyboardButton(
-					TR_BUTTONS['SEPTEMBER_2024'], callback_data='SEPTEMBER_2024'
-				),
-				InlineKeyboardButton(
-					TR_BUTTONS['JULY_2024'], callback_data='JULY_2024'
-				),
-			],
-			[
-				InlineKeyboardButton(TR_BUTTONS['MAY_2024'], callback_data='MAY_2024'),
-				InlineKeyboardButton(
-					TR_BUTTONS['MARCH_2024'], callback_data='MARCH_2024'
-				),
-			],
-			[
-				InlineKeyboardButton(
-					TR_BUTTONS['JANUARY_2024'], callback_data='JANUARY_2024'
-				),
-				InlineKeyboardButton(
-					TR_BUTTONS['DECEMBER_2023'], callback_data='DECEMBER_2023'
-				),
-			],
-			[
-				InlineKeyboardButton(
-					TR_BUTTONS['NOVEMBER_2023'], callback_data='NOVEMBER_2023'
-				),
-				InlineKeyboardButton(
-					TR_BUTTONS['OCTOBER_2023'], callback_data='OCTOBER_2023'
-				),
-			],
-			[InlineKeyboardButton(TR_BUTTONS['JULY_2023'], callback_data='JULY_2023')],
-			[
-				InlineKeyboardButton(
-					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
-				)
 			],
 		]
 	),

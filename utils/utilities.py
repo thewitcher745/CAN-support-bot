@@ -150,23 +150,58 @@ def get_categories_for_user(user_id):
 	]
 
 
-def add_user_to_category(user_id, category_id):
+def add_user_to_category(user_id, category_id=None, category_label=None):
 	"""
 	Add a user to a specific category if they're not already in it.
 
+	If only the category_id is provided, the user is added to the category with that ID.
+	If only the category_label is provided, the user is added to the category with that label.
+	If the category with the given label doesn't exist, it is created.
+	If the category with the given label already exists, the user is added to it.
+	If the user is already in the category, no action is taken.
+
 	Args:
-	    user_id: The ID of the user to add
-	    category_id: The ID of the category to add the user to
+	    user_id (int): The ID of the user to add
+	    category_id (int, optional): The ID of the category to add the user to
+	    category_label (str, optional): The label of the category to add the user to
+
+	Raises:
+	    ValueError: If neither category_id nor category_label is provided
 	"""
 	with open('data/user_lists.json', 'r') as f:
 		user_lists = json.load(f)
 
-	# Only add if user isn't already in the category
-	if user_id not in user_lists[locale][category_id]['users']:
-		user_lists[locale][category_id]['users'].append(user_id)
+	# If category_id is provided, use it to find the category
+	if category_id is not None:
+		category = user_lists[locale].get(str(category_id))
 
-		with open('data/user_lists.json', 'w') as f:
-			json.dump(user_lists, f, indent=4)
+	# If category_label is provided, find or create the category with that label
+	elif category_label is not None:
+		# Find the category with the given label
+		category = next(
+			(
+				cat
+				for cat in user_lists[locale].values()
+				if cat['label'] == category_label
+			),
+			None,
+		)
+
+		# If no category with the given label exists, create a new one
+		if category is None:
+			new_category_id = str(len(user_lists[locale]))
+			user_lists[locale][new_category_id] = {'label': category_label, 'users': []}
+			category = user_lists[locale][new_category_id]
+
+	else:
+		raise ValueError('Either category_id or category_label must be provided')
+
+	# Only add if user isn't already in the category
+	if user_id not in category['users']:
+		category['users'].append(user_id)
+
+	with open('data/user_lists.json', 'w') as f:
+		json.dump(user_lists, f, indent=4)
 
 
 def remove_user_from_category(user_id, category_id):

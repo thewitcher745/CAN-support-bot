@@ -74,7 +74,7 @@ async def start(update: Update, context: CallbackContext):
 				await update.callback_query.delete_message()
 
 		# Add user to interested category
-		add_user_to_category(str(chat_id), '0')
+		add_user_to_category(user_id=str(chat_id), category_id='0')
 
 	# Handle admin users
 	else:

@@ -18,6 +18,8 @@ lists for bulk messaging and managing user categories through an admin panel.
 - Multi-language support (English and Turkish)
 - Language setting configurable via --locale runtime argument
 - Separate bot instances for each language
+- Promo code validation system that adds users to categories based on their entered promo code
+- Category-specific message IDs allowing different content to be shown to users based on their category membership
 
 ## Prerequisites
 
@@ -49,21 +51,14 @@ lists for bulk messaging and managing user categories through an admin panel.
    Create `data/admins.json`:
    ```json
    {
-     "admins": {
-       "EN": [admin_id_1, admin_id_2],
-       "TR": [admin_id_1, admin_id_2]
-     }
-     "admins": {
-       "EN": [admin_id_1, admin_id_2],
-       "TR": [admin_id_1, admin_id_2]
-     }
+     "EN": [admin_id_1, admin_id_2],
+     "TR": [admin_id_1, admin_id_2]
    }
    ```
 
    Create `data/user_lists.json` with the desired categories (the 'INTERESTED' category is required):
    ```json
    {
-     "EN": {
      "EN": {
        "0": {
          "label": "INTERESTED",
@@ -87,15 +82,44 @@ lists for bulk messaging and managing user categories through an admin panel.
    }
    ```
 
+   Create `data/promo_codes.json` to define valid promo codes:
+   ```json
+   ["PROMO_CODE_1", "PROMO_CODE_2", "PROMO_CODE_3"]
+   ```
+
+   Create `data/user_panel_message_ids.json` to define message IDs, including category-specific messages:
+   ```json
+   {
+     "EN": {
+       "OFFERS": {
+         "PROMO_CODE_3": 475,
+         "PROMO_CODE_2": 476,
+         "DEFAULT": 379
+       },
+       "SELECT_WALLET_ADDRESS": 126,
+       "WALLET_TRC20": 146,
+       "WALLET_BEP20": 148,
+       "RESULTS": 30,
+       "HOW_IT_WORKS": 380,
+       "FEBRUARY_2025": { "FIRST_ID": 283, "ALBUM_LENGTH": 3 }
+     },
+     "TR": {
+       "OFFERS": {
+         "PROMO_CODE_3": 477,
+         "PROMO_CODE_2": 478,
+         "DEFAULT": 388
+       },
+       "SELECT_WALLET_ADDRESS": 374
+     }
+   }
+   ```
+
    The bot will automatically create `data/user_history.json` to track user registrations.
 
 ## Usage
 
 1. Start the bot with desired locale (Defaults to EN if not provided):
-1. Start the bot with desired locale (Defaults to EN if not provided):
    ```bash
-   python main.py --locale EN  # For English
-   python main.py --locale TR  # For Turkish
    python main.py --locale EN  # For English
    python main.py --locale TR  # For Turkish
    ```
@@ -121,7 +145,29 @@ The admin panel provides a keyboard interface for:
 
 Note: The admin panel interface remains in English regardless of the selected language.
 
-Note: The admin panel interface remains in English regardless of the selected language.
+## User Panel
+
+The user panel provides access to:
+- Offers (which can be category-specific based on promo codes)
+- Results
+- Wallet addresses
+- Promo code entry
+
+Users can enter promo codes to gain access to exclusive content. When a valid promo code is entered, the user is automatically added to a category with the same label as the promo code.
+
+## Category-Specific Messages
+
+The bot supports showing different content to users based on their category membership. This is configured in the `user_panel_message_ids.json` file:
+
+```json
+"OFFERS": {
+  "PROMO_CODE_3": 475,  // Message ID shown to users in PROMO_CODE_3 category
+  "PROMO_CODE_2": 476,  // Message ID shown to users in PROMO_CODE_2 category
+  "DEFAULT": 379        // Default message ID for users not in any specific category
+}
+```
+
+When a user requests a message (e.g., by clicking the OFFERS button), the system checks if they belong to any of the specified categories and shows the corresponding message.
 
 ## User Tracking
 
@@ -133,6 +179,7 @@ The bot automatically tracks:
 - Language preference
 - Registration date
 - Category memberships
+- Promo codes used
 
 This data can be exported to CSV format using the export history feature.
 
@@ -162,6 +209,7 @@ The bot includes error handling for:
 - Admin authentication failures
 - Invalid category operations
 - File operation errors
+- Invalid promo codes
 - Other exceptions that might occur during operation
 
 ## Logging
@@ -171,3 +219,4 @@ The bot uses Python's built-in logging module to provide information about its o
 - Error tracking
 - User interactions
 - Admin operations
+- Promo code validations

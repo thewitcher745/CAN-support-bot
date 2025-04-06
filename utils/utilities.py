@@ -1,4 +1,3 @@
-from datetime import datetime
 import json
 from functools import wraps
 import logging
@@ -364,20 +363,46 @@ def get_chat_id(update):
 	return chat_id
 
 
-def get_user_panel_message_id(message_name):
+def get_user_panel_message_id(message_name, user_id=None):
 	"""
 	Get the message ID for a user panel message by name.
 
+	If the message ID in the user_panel_message_ids.json file is a dictionary with a 'DEFAULT' key,
+	this function will check if the user is in any of the categories specified in the dictionary
+	and return the corresponding message ID. If the user is not in any of the specified categories,
+	the default message ID will be returned.
+
 	Args:
-	    message_name: The name of the message
+	    message_name (str): The name of the message
+	    user_id (str, optional): The ID of the user requesting the message
 
 	Returns:
-	    int: The message ID
+	    int or dict: The message ID or album info dictionary
 	"""
 	with open('data/user_panel_message_ids.json', 'r') as f:
 		message_ids = json.load(f)
 
-	return message_ids[locale][message_name]
+	message_id_value = message_ids[locale][message_name]
+
+	# If the message ID is a dictionary with a DEFAULT key and user_id is provided,
+	# check if the user is in any of the categories specified in the dictionary
+	if (
+		isinstance(message_id_value, dict)
+		and 'DEFAULT' in message_id_value
+		and user_id is not None
+	):
+		# Check each category in the dictionary (except DEFAULT)
+		for category_label, category_message_id in message_id_value.items():
+			if category_label != 'DEFAULT' and is_user_in_category(
+				user_id, category_label
+			):
+				return category_message_id
+
+		# If the user is not in any of the specified categories, return the default message ID
+		return message_id_value['DEFAULT']
+
+	# Otherwise, return the message ID as is
+	return message_id_value
 
 
 def get_update_type(update):
@@ -408,6 +433,30 @@ def get_message_labels():
 		message_ids = json.load(f)
 
 	return message_ids[locale]
+
+
+def is_valid_promo_code(promo_code: str) -> bool:
+	"""
+	Check if a promo code is valid.
+
+	Args:
+	    promo_code (str): The promo code to check
+
+	Returns:
+	    bool: True if the promo code is valid, False otherwise
+	"""
+	try:
+		with open('data/promo_codes.json', 'r') as f:
+			valid_promo_codes = json.load(f)
+			return promo_code in valid_promo_codes
+
+	except FileNotFoundError:
+		# If the promo codes file does not exist, return False
+		return False
+
+	except json.JSONDecodeError:
+		# If the promo codes file is not valid JSON, return False
+		return False
 
 
 def handle_telegram_errors(func):
@@ -485,3 +534,31 @@ def log_user_panel_errors(func):
 			)
 
 	return wrapper
+
+
+def is_user_in_category(user_id, category_label):
+	"""
+	Check if a user is in a category with the specified label.
+
+	Args:
+	    user_id (str): The ID of the user to check
+	    category_label (str): The label of the category to check
+
+	Returns:
+	    bool: True if the user is in the category, False otherwise
+	"""
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
+
+	# Find the category with the given label
+	category = next(
+		(cat for cat in user_lists[locale].values() if cat['label'] == category_label),
+		None,
+	)
+
+	# If the category doesn't exist, the user is not in it
+	if category is None:
+		return False
+
+	# Check if the user is in the category
+	return user_id in category['users']

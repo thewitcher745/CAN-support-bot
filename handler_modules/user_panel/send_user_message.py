@@ -1,4 +1,4 @@
-from telegram import MessageId, Update
+from telegram import Update
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CallbackQueryHandler
 
@@ -35,7 +35,9 @@ async def send_user_message(update: Update, context: CallbackContext):
 	Send a message to the user pressing the button in the user panel.
 	"""
 	user_id = get_chat_id(update)
-	message_id = get_user_panel_message_id(update.callback_query.data)
+	message_id = get_user_panel_message_id(
+		update.callback_query.data, user_id=str(user_id)
+	)
 	user_panel_messages_channel_id = dotenv_values('.env.secret')[
 		'USER_PANEL_MESSAGE_CHANNEL_ID'
 	]
@@ -62,8 +64,12 @@ async def send_user_message(update: Update, context: CallbackContext):
 		keyboard = fixed_keyboards.RETURN_TO_MAIN_MENU
 
 	try:
-		# If the message_id indicated in the user_panel_message_ids.json file is a dict, it means that it's an album.
-		if isinstance(message_id, dict):
+		# Handle album messages
+		if (
+			isinstance(message_id, dict)
+			and 'FIRST_ID' in message_id
+			and 'ALBUM_LENGTH' in message_id
+		):
 			message_ids = list(
 				range(
 					message_id['FIRST_ID'],
@@ -71,13 +77,11 @@ async def send_user_message(update: Update, context: CallbackContext):
 				)
 			)
 
-			sent_message_ids: tuple[MessageId] = await context.bot.copy_messages(
+			await context.bot.copy_messages(
 				from_chat_id=user_panel_messages_channel_id,
 				message_ids=message_ids,
 				chat_id=user_id,
 			)
-
-			print(sent_message_ids[0].message_id)
 
 			await context.bot.send_message(
 				chat_id=user_id,

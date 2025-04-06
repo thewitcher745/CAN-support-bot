@@ -13,6 +13,10 @@ EN_STRINGS = {
 	'OPERATION_CANCELED': '❌ Operation canceled by the user.',
 	# Monthly Results Messages
 	'MONTHLY_RESULTS_END': '🔚 Choose an option to continue.',
+	# Promo Code Messages
+	'PROMO_CODE_INPUT': '🎁 Please enter your promo code:',
+	'PROMO_CODE_VALID': '🎁 Promo code is valid and it has been registered. You can now view exclusive offers and signals.',
+	'PROMO_CODE_INVALID': '🎁 Promo code is not valid. Make sure you spelled the code correctly.',
 }
 
 TR_STRINGS = {
@@ -24,6 +28,10 @@ TR_STRINGS = {
 	'OPERATION_CANCELED': '❌ İşlem kullanıcı tarafından iptal edildi.',
 	# Monthly Results Messages
 	'MONTHLY_RESULTS_END': '🔚 Devam etmek için bir seçenek seçin.',
+	# Promo Code Messages
+	'PROMO_CODE_INPUT': '🎁 Lütfen promo kodunuzu giriniz:',
+	'PROMO_CODE_VALID': '🎁 Promo kodunuz geçerli! Özel teklifler ve sinyalleri görüntüleyebilirsiniz.',
+	'PROMO_CODE_INVALID': '🎁 Promo kodunuz geçersiz! Doğru şekilde yazdığınızden emin olun.',
 }
 
 # Admin Messages (English-only)

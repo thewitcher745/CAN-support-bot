@@ -12,6 +12,7 @@ EN_BUTTONS = {  # Main Menu
 	'OFFERS': '💰 CAN VIP offers',
 	'RESULTS': '📈 CAN VIP results',
 	'HOW_IT_WORKS': '🤔 How does CAN VIP work?',
+	'PROMO_CODE': '🎁 Enter a promo code',
 	'CONTACT_ADMIN': '📞 Contact admin',
 	# Offers Menu
 	'GET_WALLET': '💰 Get our wallet address',
@@ -53,6 +54,7 @@ TR_BUTTONS = {
 	'OFFERS': '💰 VIP üye',
 	'RESULTS': '📈 VIP Sonuçları',
 	'HOW_IT_WORKS': '🤔 VIP sistemimiz nasıl çalışıyor?',
+	'PROMO_CODE': '🎁 Promosyon kodu girin',
 	'CONTACT_ADMIN': '📞 Destek Konuş',
 	# Offers Menu
 	'GET_WALLET': '💰 Katılmak için bu adresimiz',
@@ -120,6 +122,11 @@ EN_KEYBOARDS = {
 				)
 			],
 			[InlineKeyboardButton(EN_BUTTONS['RESULTS'], callback_data='RESULTS')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['PROMO_CODE'], callback_data='START_ENTER_PROMO_CODE'
+				)
+			],
 			[
 				InlineKeyboardButton(
 					EN_BUTTONS['CONTACT_ADMIN'], url='https://t.me/CANSupport'
@@ -295,6 +302,16 @@ EN_KEYBOARDS = {
 			],
 		]
 	),
+	'PROMO_CODE_VALID': InlineKeyboardMarkup(
+		[
+			[InlineKeyboardButton(EN_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				)
+			],
+		]
+	),
 }
 
 TR_KEYBOARDS = {
@@ -327,6 +344,11 @@ TR_KEYBOARDS = {
 				)
 			],
 			# [InlineKeyboardButton(TR_BUTTONS['RESULTS'], callback_data='RESULTS')],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['PROMO_CODE'], callback_data='START_ENTER_PROMO_CODE'
+				)
+			],
 			[
 				InlineKeyboardButton(
 					TR_BUTTONS['CONTACT_ADMIN'], url='https://t.me/Attiladestek'
@@ -421,6 +443,16 @@ TR_KEYBOARDS = {
 				InlineKeyboardButton(
 					TR_BUTTONS['MARCH_2025'], callback_data='MARCH_2025'
 				),
+			],
+		]
+	),
+	'PROMO_CODE_VALID': InlineKeyboardMarkup(
+		[
+			[InlineKeyboardButton(TR_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				)
 			],
 		]
 	),

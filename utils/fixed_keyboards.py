@@ -49,6 +49,14 @@ def create_sample_signals_pair_select_keyboard(
 		+ [
 			[
 				InlineKeyboardButton(
+					text=button_labels['OFFERS'],
+					callback_data='OFFERS',
+				),
+			]
+		]
+		+ [
+			[
+				InlineKeyboardButton(
 					text=button_labels['MAIN_MENU'],
 					callback_data='RETURN_TO_MAIN_MENU',
 				),

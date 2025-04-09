@@ -340,11 +340,11 @@ EN_KEYBOARDS = {
 					EN_BUTTONS['CAN_BAG'], callback_data='SAMPLE_SIGNALS_CAN_BAG'
 				)
 			],
-			[
-				InlineKeyboardButton(
-					EN_BUTTONS['FUTURES'], callback_data='SAMPLE_SIGNALS_FUTURES'
-				)
-			],
+			# [
+			# 	InlineKeyboardButton(
+			# 		EN_BUTTONS['FUTURES'], callback_data='SAMPLE_SIGNALS_FUTURES'
+			# 	)
+			# ],
 			[
 				InlineKeyboardButton(
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'

@@ -12,6 +12,7 @@ EN_BUTTONS = {  # Main Menu
 	'OFFERS': '💰 CAN VIP offers',
 	'RESULTS': '📈 CAN VIP results',
 	'HOW_IT_WORKS': '🤔 How does CAN VIP work?',
+	'SAMPLE_SIGNALS_SELECT_TYPE': '💰 Free VIP signals',
 	'PROMO_CODE': '🎁 Enter a promo code',
 	'CONTACT_ADMIN': '📞 Contact admin',
 	# Offers Menu
@@ -43,6 +44,9 @@ EN_BUTTONS = {  # Main Menu
 	'SEPTEMBER_2023': '📅 September 2023',
 	'AUGUST_2023': '📅 August 2023',
 	'JULY_2023': '📅 July 2023',
+	# Sample signals menu
+	'CAN_BAG': '💸 CAN Bag',
+	'FUTURES': '⚖️ Futures',
 	# Common Buttons
 	'YES': '✅ Yes',
 	'NO': '❌ Cancel',
@@ -111,6 +115,33 @@ EN_KEYBOARDS = {
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
 				)
 			]
+		]
+	),
+	'USER_PANEL_MAIN_OLDVIP': InlineKeyboardMarkup(
+		[
+			[InlineKeyboardButton(EN_BUTTONS['OFFERS'], callback_data='OFFERS')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['HOW_IT_WORKS'], callback_data='HOW_IT_WORKS'
+				)
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['SAMPLE_SIGNALS_SELECT_TYPE'],
+					callback_data='SAMPLE_SIGNALS_SELECT_TYPE',
+				)
+			],
+			[InlineKeyboardButton(EN_BUTTONS['RESULTS'], callback_data='RESULTS')],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['PROMO_CODE'], callback_data='START_ENTER_PROMO_CODE'
+				)
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['CONTACT_ADMIN'], url='https://t.me/CANSupport'
+				)
+			],
 		]
 	),
 	'USER_PANEL_MAIN': InlineKeyboardMarkup(
@@ -302,6 +333,49 @@ EN_KEYBOARDS = {
 			],
 		]
 	),
+	'SAMPLE_SIGNALS_SELECT_TYPE': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['CAN_BAG'], callback_data='SAMPLE_SIGNALS_CAN_BAG'
+				)
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['FUTURES'], callback_data='SAMPLE_SIGNALS_FUTURES'
+				)
+			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				)
+			],
+		]
+	),
+	'SAMPLE_SIGNAL_CAN_BAG': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
+				InlineKeyboardButton(
+					EN_BUTTONS['BACK'], callback_data='SAMPLE_SIGNALS_CAN_BAG'
+				),
+			],
+		]
+	),
+	'SAMPLE_SIGNAL_FUTURES': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
+				InlineKeyboardButton(
+					EN_BUTTONS['BACK'], callback_data='SAMPLE_SIGNALS_FUTURES'
+				),
+			],
+		]
+	),
 	'PROMO_CODE_VALID': InlineKeyboardMarkup(
 		[
 			[InlineKeyboardButton(EN_BUTTONS['OFFERS'], callback_data='OFFERS')],
@@ -442,6 +516,30 @@ TR_KEYBOARDS = {
 			[
 				InlineKeyboardButton(
 					TR_BUTTONS['MARCH_2025'], callback_data='MARCH_2025'
+				),
+			],
+		]
+	),
+	'SAMPLE_SIGNAL_CAN_BAG': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
+				InlineKeyboardButton(
+					TR_BUTTONS['BACK'], callback_data='SAMPLE_SIGNALS_CAN_BAG'
+				),
+			],
+		]
+	),
+	'SAMPLE_SIGNAL_FUTURES': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
+				InlineKeyboardButton(
+					TR_BUTTONS['BACK'], callback_data='SAMPLE_SIGNALS_FUTURES'
 				),
 			],
 		]

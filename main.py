@@ -16,7 +16,7 @@ from handler_modules.admin_panel import (
 	send_user_logs,
 	clear_user_logs,
 )
-from handler_modules.user_panel import promo_code, send_user_message
+from handler_modules.user_panel import promo_code, send_user_message, sample_signals
 from utils.utilities import get_bot_token
 
 # Enable logging
@@ -58,9 +58,13 @@ def main():
 	application.add_handler(export_history.export_history_handler)
 	application.add_handler(send_user_logs.send_user_logs_handler)
 	application.add_handler(clear_user_logs.clear_user_logs_handler)
-	application.add_handler(promo_code.check_promo_code_handler)
 
 	# User panel handlers are multiple handlers, so we need to add them all
+	application.add_handler(promo_code.check_promo_code_handler)
+
+	for handler in sample_signals.sample_signal_handlers:
+		application.add_handler(handler)
+
 	for handler in send_user_message.send_user_message_handlers:
 		application.add_handler(handler)
 

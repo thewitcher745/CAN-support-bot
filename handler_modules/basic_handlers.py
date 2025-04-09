@@ -19,6 +19,7 @@ from utils.utilities import (
 	get_update_type,
 	handle_telegram_errors,
 	register_user_start,
+	is_user_in_category,
 )
 
 
@@ -47,13 +48,18 @@ async def start(update: Update, context: CallbackContext):
 
 	# Handle regular users
 	if not is_admin:
+		keyboard = (
+			fixed_keyboards.USER_PANEL_MAIN_OLDVIP
+			if is_user_in_category(chat_id, 'OLDVIP')
+			else fixed_keyboards.USER_PANEL_MAIN
+		)
 		if update_type == 'MESSAGE':
 			# Register new user start and send welcome
 			register_user_start(update.message)
 
 			await update.message.reply_text(
 				USER_WELCOME.format(name=update.message.from_user.first_name),
-				reply_markup=fixed_keyboards.USER_PANEL_MAIN,
+				reply_markup=keyboard,
 			)
 		else:
 			# Handle callback query for returning users
@@ -62,14 +68,14 @@ async def start(update: Update, context: CallbackContext):
 			# If the edit fails, that means the message probably is a media message with a caption. Remove the media.
 			try:
 				await update.callback_query.edit_message_text(
-					USER_WELCOME_BACK, reply_markup=fixed_keyboards.USER_PANEL_MAIN
+					USER_WELCOME_BACK, reply_markup=keyboard
 				)
 			except BadRequest:
 				await update.callback_query.answer()
 				await context.bot.send_message(
 					chat_id=chat_id,
 					text=USER_WELCOME_BACK,
-					reply_markup=fixed_keyboards.USER_PANEL_MAIN,
+					reply_markup=keyboard,
 				)
 				await update.callback_query.delete_message()
 

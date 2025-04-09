@@ -51,6 +51,8 @@ async def send_user_message(update: Update, context: CallbackContext):
 		keyboard = fixed_keyboards.HOW_IT_WORKS
 	elif update.callback_query.data == 'SELECT_WALLET_ADDRESS':
 		keyboard = fixed_keyboards.SELECT_WALLET_ADDRESS
+	elif update.callback_query.data == 'SAMPLE_SIGNALS_SELECT_TYPE':
+		keyboard = fixed_keyboards.SAMPLE_SIGNALS_SELECT_TYPE
 
 	# If the user pressed a wallet address button
 	elif update.callback_query.data.startswith('WALLET_'):
@@ -60,8 +62,16 @@ async def send_user_message(update: Update, context: CallbackContext):
 	elif any(month in update.callback_query.data for month in MONTH_NAMES):
 		keyboard = fixed_keyboards.SHOW_MONTHLY_RESULTS
 
-	else:
+	elif not (
+		update.callback_query.data == 'SAMPLE_SIGNALS_SELECT_TYPE'
+		or update.callback_query.data == 'CAN_BAG'
+		or update.callback_query.data == 'FUTURES'
+	):
 		keyboard = fixed_keyboards.RETURN_TO_MAIN_MENU
+
+	# Handle sample signals buttons
+	else:
+		await update.callback_query.answer()
 
 	try:
 		# Handle album messages

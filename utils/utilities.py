@@ -459,6 +459,38 @@ def is_valid_promo_code(promo_code: str) -> bool:
 		return False
 
 
+def get_sample_signals_data():
+	"""
+	Load and return the sample signals data from the JSON file.
+	This function should be called each time the data is needed to ensure it's always up-to-date.
+
+	Returns:
+	    dict: Dictionary containing sample signals data for the current locale
+	"""
+	with open('data/sample_signals.json', 'r', encoding='utf-8') as f:
+		sample_signals = json.load(f)
+
+	return sample_signals[locale]
+
+
+def get_signals_for_type(signal_type: str) -> list:
+	"""
+	Get the signals for a specific signal type.
+
+	Args:
+		signal_type (str): The type of signal to get the signals for
+
+	Returns:
+		list: List of signals for the specified signal type
+	"""
+	sample_signals = get_sample_signals_data()
+
+	# Get the signals for the specified signal type
+	signals = sample_signals.get(signal_type, [])
+
+	return signals
+
+
 def handle_telegram_errors(func):
 	"""
 	Decorator that handles common Telegram errors and cleans up user data.
@@ -547,6 +579,8 @@ def is_user_in_category(user_id, category_label):
 	Returns:
 	    bool: True if the user is in the category, False otherwise
 	"""
+	user_id = str(user_id)
+
 	with open('data/user_lists.json', 'r') as f:
 		user_lists = json.load(f)
 

@@ -6,8 +6,30 @@ User messages are localized (EN/TR), admin messages are English-only.
 # User Messages (Localized)
 EN_STRINGS = {
 	# User Welcome Messages
-	'USER_WELCOME': "🤖 Hello, {name}! I'm a bot that helps you contact CAN support. Choose your desired option from the menu below to continue.",
-	'USER_WELCOME_BACK': '🤖 Welcome back! Choose your desired option from the menu below to continue.',
+	'USER_WELCOME': """🤖 Hello, {name}!
+
+What CAN this bot give you? 🧐
+
+✅ Free SIGNALS from our VIP 
+✅ Information about the latest VIP offers 
+✅ Results of our VIP performance in previous months 
+✅ Details about our VIP services.
+
+Make sure not to delete your conversation with the bot so you CAN receive new FREE signals + New VIP offers. ☃️
+
+Choose your desired option from the menu below to continue.""",
+	'USER_WELCOME_BACK': """🤖 Welcome back!
+
+What CAN this bot give you? 🧐
+
+✅ Free SIGNALS from our VIP 
+✅ Information about the latest VIP offers 
+✅ Results of our VIP performance in previous months 
+✅ Details about our VIP services.
+
+Make sure not to delete your conversation with the bot so you CAN receive new FREE signals + New VIP offers. ☃️
+
+Choose your desired option from the menu below to continue.""",
 	'USER_HELP': '📝 This bot is used to contact users. Select your desired option after using the /start command.',
 	# User Operation Messages
 	'OPERATION_CANCELED': '❌ Operation canceled by the user.',

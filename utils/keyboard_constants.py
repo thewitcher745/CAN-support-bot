@@ -18,6 +18,10 @@ EN_BUTTONS = {  # Main Menu
 	'RESULTS': '📈 CAN VIP results',
 	'RESULTS_P1': '👈 Page (2/2)',
 	'RESULTS_P2': 'Page (1/2) 👉',
+	# Results Menu
+	'RESULTS': '📈 CAN VIP results',
+	'RESULTS_P1': '👈 Page (2/2)',
+	'RESULTS_P2': 'Page (1/2) 👉',
 	# Offers Menu
 	'GET_WALLET': '💰 Get our wallet address',
 	'MAIN_MENU': '🔙 Main menu',
@@ -289,6 +293,18 @@ EN_KEYBOARDS = {
 				),
 				InlineKeyboardButton(EN_BUTTONS['MAY_2024'], callback_data='MAY_2024'),
 			],
+			[
+				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
+				InlineKeyboardButton(
+					EN_BUTTONS['RESULTS_P2'], callback_data='RESULTS_P2'
+				)
+			],
+		]
+	),
+	'RESULTS_P2': InlineKeyboardMarkup(
+		[
 			[
 				InlineKeyboardButton(
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'

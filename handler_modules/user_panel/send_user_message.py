@@ -42,9 +42,19 @@ async def send_user_message(update: Update, context: CallbackContext):
 		'USER_PANEL_MESSAGE_CHANNEL_ID'
 	]
 
+	# Handle RESULTS_P2 callback by updating the reply markup
+	if update.callback_query.data == 'RESULTS_P2':
+		print('x')
+		await update.callback_query.edit_message_reply_markup(
+			reply_markup=fixed_keyboards.RESULTS_P2
+		)
+		await update.callback_query.answer()
+		return
+
 	# Keyboard is different for different states
 	if update.callback_query.data == 'RESULTS':
 		keyboard = fixed_keyboards.RESULTS
+
 	elif update.callback_query.data == 'OFFERS':
 		keyboard = fixed_keyboards.OFFERS
 	elif update.callback_query.data == 'HOW_IT_WORKS':

@@ -10,11 +10,14 @@ from utils.utilities import get_category_id_list
 # User Buttons (Localized)
 EN_BUTTONS = {  # Main Menu
 	'OFFERS': '💰 CAN VIP offers',
-	'RESULTS': '📈 CAN VIP results',
 	'HOW_IT_WORKS': '🤔 How does CAN VIP work?',
 	'SAMPLE_SIGNALS_SELECT_TYPE': '💰 Free VIP signals',
 	'PROMO_CODE': '🎁 Enter a promo code',
 	'CONTACT_ADMIN': '📞 Contact admin',
+	# Results Menu
+	'RESULTS': '📈 CAN VIP results',
+	'RESULTS_P1': '👈 Page (2/2)',
+	'RESULTS_P2': 'Page (1/2) 👉',
 	# Offers Menu
 	'GET_WALLET': '💰 Get our wallet address',
 	'MAIN_MENU': '🔙 Main menu',
@@ -288,6 +291,18 @@ EN_KEYBOARDS = {
 			],
 			[
 				InlineKeyboardButton(
+					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
+				),
+				InlineKeyboardButton(
+					EN_BUTTONS['RESULTS_P2'], callback_data='RESULTS_P2'
+				)
+			],
+		]
+	),
+	'RESULTS_P2': InlineKeyboardMarkup(
+		[
+			[
+				InlineKeyboardButton(
 					EN_BUTTONS['APRIL_2024'], callback_data='APRIL_2024'
 				),
 				InlineKeyboardButton(
@@ -329,7 +344,8 @@ EN_KEYBOARDS = {
 			[
 				InlineKeyboardButton(
 					EN_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
-				)
+				),
+				InlineKeyboardButton(EN_BUTTONS['RESULTS_P1'], callback_data='RESULTS'),
 			],
 		]
 	),

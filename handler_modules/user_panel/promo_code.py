@@ -12,7 +12,11 @@ from telegram.ext import (
 
 from handler_modules.basic_handlers import cancel_operation
 from utils import fixed_keyboards, strings
-from utils.utilities import is_valid_promo_code, add_user_to_category
+from utils.utilities import (
+	is_valid_promo_code,
+	add_user_to_category,
+	remove_user_from_category,
+)
 
 
 async def start_enter_promo_code(update: Update, context: CallbackContext):
@@ -45,6 +49,9 @@ async def check_promo_code(update: Update, context: CallbackContext):
 	if is_valid_promo_code(promo_code):
 		# Add the user to a category with the same label as the promo code
 		add_user_to_category(user_id, category_label=promo_code)
+
+		# Remove the user from the INTERESTED category (category_id='0')
+		remove_user_from_category(user_id, category_id='0')
 
 		await update.message.reply_text(
 			text=strings.PROMO_CODE_VALID,

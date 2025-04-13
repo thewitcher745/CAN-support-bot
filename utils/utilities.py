@@ -35,13 +35,13 @@ def get_localized_message_id(message_name: str) -> int:
 	Get a message ID based on the current locale and message name.
 
 	Args:
-		message_name: The name of the message to get the ID for
+	    message_name: The name of the message to get the ID for
 
 	Returns:
-		The message ID for the current locale
+	    The message ID for the current locale
 
 	Raises:
-		KeyError: If the message name doesn't exist for the current locale
+	    KeyError: If the message name doesn't exist for the current locale
 	"""
 	message_ids_file = 'data/user_panel_message_ids.json'
 
@@ -159,6 +159,9 @@ def add_user_to_category(user_id, category_id=None, category_label=None):
 	If the category with the given label already exists, the user is added to it.
 	If the user is already in the category, no action is taken.
 
+	If the category is not INTERESTED (category_id='0'), the user will be removed from
+	the INTERESTED category.
+
 	Args:
 	    user_id (int): The ID of the user to add
 	    category_id (int, optional): The ID of the category to add the user to
@@ -173,24 +176,26 @@ def add_user_to_category(user_id, category_id=None, category_label=None):
 	# If category_id is provided, use it to find the category
 	if category_id is not None:
 		category = user_lists[locale].get(str(category_id))
+		target_category_id = str(category_id)
 
 	# If category_label is provided, find or create the category with that label
 	elif category_label is not None:
 		# Find the category with the given label
-		category = next(
-			(
-				cat
-				for cat in user_lists[locale].values()
-				if cat['label'] == category_label
-			),
-			None,
-		)
+		category_id_found = None
+		for cat_id, cat in user_lists[locale].items():
+			if cat['label'] == category_label:
+				category = cat
+				category_id_found = cat_id
+				break
 
 		# If no category with the given label exists, create a new one
-		if category is None:
+		if category_id_found is None:
 			new_category_id = str(len(user_lists[locale]))
 			user_lists[locale][new_category_id] = {'label': category_label, 'users': []}
 			category = user_lists[locale][new_category_id]
+			target_category_id = new_category_id
+		else:
+			target_category_id = category_id_found
 
 	else:
 		raise ValueError('Either category_id or category_label must be provided')
@@ -199,6 +204,13 @@ def add_user_to_category(user_id, category_id=None, category_label=None):
 	if user_id not in category['users']:
 		category['users'].append(user_id)
 
+		# If adding to a non-INTERESTED category, remove from INTERESTED
+		if target_category_id != '0':
+			# Remove from INTERESTED category if present
+			interested_category = user_lists[locale].get('0')
+			if interested_category and user_id in interested_category['users']:
+				interested_category['users'].remove(user_id)
+
 	with open('data/user_lists.json', 'w') as f:
 		json.dump(user_lists, f, indent=4)
 
@@ -206,6 +218,8 @@ def add_user_to_category(user_id, category_id=None, category_label=None):
 def remove_user_from_category(user_id, category_id):
 	"""
 	Remove a user from a specific category if they're in it.
+	If after removal the user is not in any non-INTERESTED category,
+	they will be added to the INTERESTED category (category_id='0').
 
 	Args:
 	    user_id: The ID of the user to remove
@@ -215,8 +229,23 @@ def remove_user_from_category(user_id, category_id):
 		user_lists = json.load(f)
 
 	# Only remove if user is in the category
-	if user_id in user_lists[locale][category_id]['users']:
-		user_lists[locale][category_id]['users'].remove(user_id)
+	if user_id in user_lists[locale][str(category_id)]['users']:
+		user_lists[locale][str(category_id)]['users'].remove(user_id)
+
+		# If we removed from a non-INTERESTED category, check if user should be added to INTERESTED
+		if str(category_id) != '0':
+			# Check if user is in any other non-INTERESTED category
+			in_other_category = False
+			for cat_id, cat in user_lists[locale].items():
+				if cat_id != '0' and user_id in cat['users']:
+					in_other_category = True
+					break
+
+			# If not in any other category, add to INTERESTED
+			if not in_other_category:
+				interested_category = user_lists[locale].get('0')
+				if interested_category and user_id not in interested_category['users']:
+					interested_category['users'].append(user_id)
 
 		with open('data/user_lists.json', 'w') as f:
 			json.dump(user_lists, f, indent=4)
@@ -269,7 +298,8 @@ def set_category_user_list(category_id, user_list):
 
 def add_user_list_to_category(category_id, user_list):
 	"""
-	Add multiple users to a category, avoiding duplicates.
+	Add multiple users to a category, avoiding duplicates and removing them from
+	INTERESTED if they were already in it.
 
 	Args:
 	    category_id: The ID of the category to add users to
@@ -282,6 +312,10 @@ def add_user_list_to_category(category_id, user_list):
 	for user in user_list:
 		if user not in user_lists[locale][category_id]['users']:
 			user_lists[locale][category_id]['users'].append(user)
+
+		# If the user is in INTERESTED, remove them
+		if user in user_lists[locale]['0']['users']:
+			user_lists[locale]['0']['users'].remove(user)
 
 	with open('data/user_lists.json', 'w') as f:
 		json.dump(user_lists, f, indent=4)
@@ -302,6 +336,21 @@ def remove_user_list_from_category(category_id, user_list):
 	for user in user_list:
 		if user in user_lists[locale][category_id]['users']:
 			user_lists[locale][category_id]['users'].remove(user)
+
+			# If we removed from a non-INTERESTED category, check if user should be added to INTERESTED
+			if category_id != '0':
+				# Check if user is in any other non-INTERESTED category
+				in_other_category = False
+				for cat_id, cat in user_lists[locale].items():
+					if cat_id != '0' and user in cat['users']:
+						in_other_category = True
+						break
+
+				# If not in any other category, add to INTERESTED
+				if not in_other_category:
+					interested_category = user_lists[locale].get('0')
+					if interested_category and user not in interested_category['users']:
+						interested_category['users'].append(user)
 
 	with open('data/user_lists.json', 'w') as f:
 		json.dump(user_lists, f, indent=4)
@@ -478,10 +527,10 @@ def get_signals_for_type(signal_type: str) -> list:
 	Get the signals for a specific signal type.
 
 	Args:
-		signal_type (str): The type of signal to get the signals for
+	    signal_type (str): The type of signal to get the signals for
 
 	Returns:
-		list: List of signals for the specified signal type
+	    list: List of signals for the specified signal type
 	"""
 	sample_signals = get_sample_signals_data()
 
@@ -596,3 +645,26 @@ def is_user_in_category(user_id, category_label):
 
 	# Check if the user is in the category
 	return user_id in category['users']
+
+
+def is_user_in_non_interested_category(user_id):
+	"""
+	Check if a user is in any category other than INTERESTED (category_id='0').
+
+	Args:
+	    user_id (str): The ID of the user to check
+
+	Returns:
+	    bool: True if the user is in any non-INTERESTED category, False otherwise
+	"""
+	with open('data/user_lists.json', 'r') as f:
+		user_lists = json.load(f)
+
+	# Check if user is in any category other than INTERESTED (category_id='0')
+	for category_id, category in user_lists[locale].items():
+		print(category)
+		if category_id != '0' and str(user_id) in category['users']:
+			print('User is in a non-INTERESTED category')
+			return True
+	print('User is not in a non-INTERESTED category')
+	return False

@@ -20,6 +20,7 @@ from utils.utilities import (
 	handle_telegram_errors,
 	register_user_start,
 	is_user_in_category,
+	is_user_in_non_interested_category,
 )
 
 
@@ -61,6 +62,11 @@ async def start(update: Update, context: CallbackContext):
 				USER_WELCOME.format(name=update.message.from_user.first_name),
 				reply_markup=keyboard,
 			)
+
+			# Add user to interested category if they are not in a non-INTERESTED category
+			if not is_user_in_non_interested_category(chat_id):
+				add_user_to_category(user_id=str(chat_id), category_id='0')
+
 		else:
 			# Handle callback query for returning users
 			await update.callback_query.answer()
@@ -78,9 +84,6 @@ async def start(update: Update, context: CallbackContext):
 					reply_markup=keyboard,
 				)
 				await update.callback_query.delete_message()
-
-		# Add user to interested category
-		add_user_to_category(user_id=str(chat_id), category_id='0')
 
 	# Handle admin users
 	else:

@@ -78,7 +78,14 @@ TR_BUTTONS = {
 	'WALLET_BEP20': '💰 USDT BEP20 cüzdan',
 	'SEND_PAYMENT_PROOF': '✅ Ödemenin fotoğrafını bize gönderin',
 	# Results Menu
-	'MARCH_2025': '📅 Mart 2025',
+	'APRIL_2025': '📅 2025 Nisan Ayı',
+	'MARCH_2025': '📅 2025 Mart Ayı',
+	'FEBRUARY_2025': '📅 2025 Şubat Ayı',
+	'JANUARY_2025': '📅 2025 Ocak Ayı',
+	'DECEMBER_2024': '📅 2024 Aralık Ayı',
+	'NOVEMBER_2024': '📅 2024 Kasım Ayı',
+	'OCTOBER_2024': '📅 2024 Ekim Ayı',
+	'SEPTEMBER_2024': '📅 2024 Eylül Ayı',
 	# Common Buttons
 	'YES': '✅ Evet',
 	'NO': '❌ İptal',
@@ -461,7 +468,7 @@ TR_KEYBOARDS = {
 					TR_BUTTONS['HOW_IT_WORKS'], callback_data='HOW_IT_WORKS'
 				)
 			],
-			# [InlineKeyboardButton(TR_BUTTONS['RESULTS'], callback_data='RESULTS')],
+			[InlineKeyboardButton(TR_BUTTONS['RESULTS'], callback_data='RESULTS')],
 			[
 				InlineKeyboardButton(
 					TR_BUTTONS['PROMO_CODE'], callback_data='START_ENTER_PROMO_CODE'
@@ -559,7 +566,39 @@ TR_KEYBOARDS = {
 		[
 			[
 				InlineKeyboardButton(
+					TR_BUTTONS['APRIL_2025'], callback_data='APRIL_2025'
+				),
+				InlineKeyboardButton(
 					TR_BUTTONS['MARCH_2025'], callback_data='MARCH_2025'
+				),
+			],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['FEBRUARY_2025'], callback_data='FEBRUARY_2025'
+				),
+				InlineKeyboardButton(
+					TR_BUTTONS['JANUARY_2025'], callback_data='JANUARY_2025'
+				),
+			],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['DECEMBER_2024'], callback_data='DECEMBER_2024'
+				),
+				InlineKeyboardButton(
+					TR_BUTTONS['NOVEMBER_2024'], callback_data='NOVEMBER_2024'
+				),
+			],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['OCTOBER_2024'], callback_data='OCTOBER_2024'
+				),
+				InlineKeyboardButton(
+					TR_BUTTONS['SEPTEMBER_2024'], callback_data='SEPTEMBER_2024'
+				),
+			],
+			[
+				InlineKeyboardButton(
+					TR_BUTTONS['MAIN_MENU'], callback_data='RETURN_TO_MAIN_MENU'
 				),
 			],
 		]

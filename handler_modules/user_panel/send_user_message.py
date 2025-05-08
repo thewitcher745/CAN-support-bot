@@ -8,10 +8,10 @@ from utils.utilities import (
 	get_chat_id,
 	get_message_labels,
 	get_user_panel_message_id,
+	log_user_action_detail,
 	log_user_panel_errors,
 )
 from dotenv import dotenv_values
-
 
 MONTH_NAMES = [
 	'JANUARY',
@@ -44,38 +44,46 @@ async def send_user_message(update: Update, context: CallbackContext):
 
 	# Handle RESULTS_P1 and RESULTS_P2 callbacks by updating the reply markup
 	if update.callback_query.data == 'RESULTS_P1':
+		log_user_action_detail(update, 'RESULTS_P1')
 		await update.callback_query.edit_message_reply_markup(
 			reply_markup=fixed_keyboards.RESULTS
 		)
 		await update.callback_query.answer()
 		return
 	elif update.callback_query.data == 'RESULTS_P2':
+		log_user_action_detail(update, 'RESULTS_P2')
 		await update.callback_query.edit_message_reply_markup(
 			reply_markup=fixed_keyboards.RESULTS_P2
 		)
 		await update.callback_query.answer()
 		return
-	
 
 	# Keyboard is different for different states
 	if update.callback_query.data == 'RESULTS':
+		log_user_action_detail(update, 'RESULTS')
 		keyboard = fixed_keyboards.RESULTS
 
 	elif update.callback_query.data == 'OFFERS':
+		log_user_action_detail(update, 'OFFERS')
 		keyboard = fixed_keyboards.OFFERS
 	elif update.callback_query.data == 'HOW_IT_WORKS':
+		log_user_action_detail(update, 'HOW_IT_WORKS')
 		keyboard = fixed_keyboards.HOW_IT_WORKS
 	elif update.callback_query.data == 'SELECT_WALLET_ADDRESS':
+		log_user_action_detail(update, 'SELECT_WALLET_ADDRESS')
 		keyboard = fixed_keyboards.SELECT_WALLET_ADDRESS
 	elif update.callback_query.data == 'SAMPLE_SIGNALS_SELECT_TYPE':
+		log_user_action_detail(update, 'SAMPLE_SIGNALS_SELECT_TYPE')
 		keyboard = fixed_keyboards.SAMPLE_SIGNALS_SELECT_TYPE
 
 	# If the user pressed a wallet address button
 	elif update.callback_query.data.startswith('WALLET_'):
+		log_user_action_detail(update, update.callback_query.data)
 		keyboard = fixed_keyboards.SHOW_WALLET_ADDRESS
 
 	# If the user pressed a monthly results button
 	elif any(month in update.callback_query.data for month in MONTH_NAMES):
+		log_user_action_detail(update, update.callback_query.data)
 		keyboard = fixed_keyboards.SHOW_MONTHLY_RESULTS
 
 	elif not (
@@ -83,10 +91,12 @@ async def send_user_message(update: Update, context: CallbackContext):
 		or update.callback_query.data == 'CAN_BAG'
 		or update.callback_query.data == 'FUTURES'
 	):
+		log_user_action_detail(update, 'RETURN_TO_MAIN_MENU')
 		keyboard = fixed_keyboards.RETURN_TO_MAIN_MENU
 
 	# Handle sample signals buttons
 	else:
+		log_user_action_detail(update, update.callback_query.data)
 		await update.callback_query.answer()
 
 	try:

@@ -1,10 +1,12 @@
 import json
 from functools import wraps
+from datetime import datetime
 import logging
 from dotenv import dotenv_values
 from telegram import error, Update
 from telegram.ext import ConversationHandler, CallbackContext
 import os
+
 from utils.config import Config
 
 locale = Config.get_locale().value
@@ -665,3 +667,65 @@ def is_user_in_non_interested_category(user_id):
 		if category_id != '0' and str(user_id) in category['users']:
 			return True
 	return False
+
+
+def log_user_interaction(func):
+	"""
+	Decorator that logs user interactions to logs/user_interactions_<locale>.log
+	"""
+	logger = logging.getLogger(f'user_interactions_{locale}')
+
+	# Create logs directory if it doesn't exist
+	os.makedirs('logs', exist_ok=True)
+
+	# Configure file handler if not already added
+	log_file = f'logs/user_interactions_{locale}.log'
+	if not any(
+		isinstance(h, logging.FileHandler)
+		and h.baseFilename == os.path.abspath(log_file)
+		for h in logger.handlers
+	):
+		file_handler = logging.FileHandler(log_file)
+		file_handler.setFormatter(logging.Formatter('%(message)s'))
+		logger.addHandler(file_handler)
+
+	@wraps(func)
+	async def wrapper(update, context, *args, **kwargs):
+		user = update.effective_user
+		user_id = user.id if user else 'unknown'
+		username = user.username if user and user.username else 'unknown'
+		logger.info(
+			f'{datetime.now().isoformat()} | {func.__name__} | user_id={user_id} | username={username}'
+		)
+		return await func(update, context, *args, **kwargs)
+
+	return wrapper
+
+
+def log_user_action_detail(update, action):
+	"""
+	Log detailed user action (button/section/etc.) with time, function, user info, and action.
+	Logs are appended to logs/user_interactions_<locale>.log (not overwritten on restart).
+	"""
+	logger = logging.getLogger(f'user_interactions_{locale}')
+
+	# Create logs directory if it doesn't exist
+	os.makedirs('logs', exist_ok=True)
+
+	# Configure file handler if not already added
+	log_file = f'logs/user_interactions_{locale}.log'
+	if not any(
+		isinstance(h, logging.FileHandler)
+		and h.baseFilename == os.path.abspath(log_file)
+		for h in logger.handlers
+	):
+		file_handler = logging.FileHandler(log_file)
+		file_handler.setFormatter(logging.Formatter('%(message)s'))
+		logger.addHandler(file_handler)
+
+	user = update.effective_user
+	user_id = user.id if user else 'unknown'
+	username = user.username if user and user.username else 'unknown'
+	logger.info(
+		f'{datetime.now().isoformat()} | action={action} | user_id={user_id} | username={username}'
+	)

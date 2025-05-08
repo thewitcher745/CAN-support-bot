@@ -20,9 +20,9 @@ from handler_modules.user_panel import promo_code, send_user_message, sample_sig
 from utils.utilities import get_bot_token
 
 # Enable logging
-logging.basicConfig(
-	format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
+logging.basicConfig(format='%(message)s', level=logging.INFO)
+
+logging.getLogger('httpx').setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 

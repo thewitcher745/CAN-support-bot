@@ -15,9 +15,12 @@ from utils import fixed_keyboards, strings
 from utils.utilities import (
 	is_valid_promo_code,
 	add_user_to_category,
+	log_user_interaction,
+	log_user_action_detail,
 )
 
 
+@log_user_interaction
 async def start_enter_promo_code(update: Update, context: CallbackContext):
 	"""
 	Start the conversation and prompt the user to enter a promo code.
@@ -39,9 +42,11 @@ async def start_enter_promo_code(update: Update, context: CallbackContext):
 	return 'PROMO_CODE_INPUT'
 
 
+@log_user_interaction
 async def check_promo_code(update: Update, context: CallbackContext):
 	# Get the promo code from the user's input
 	promo_code = update.message.text.strip().upper()
+	log_user_action_detail(update, f'PROMO_CODE_ENTERED_{promo_code}')
 	user_id = str(update.effective_user.id)
 
 	# Check if the promo code is valid

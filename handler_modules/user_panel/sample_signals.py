@@ -6,6 +6,8 @@ from utils import fixed_keyboards
 from utils.utilities import (
 	get_chat_id,
 	get_user_panel_message_id,
+	log_user_interaction,
+	log_user_action_detail,
 	log_user_panel_errors,
 )
 
@@ -44,6 +46,7 @@ async def start_sample_signals(update: Update, context: CallbackContext):
 		print(f'Error in sample_signals handler: {e}')
 
 
+@log_user_interaction
 @log_user_panel_errors
 async def get_signal_type(update: Update, context: CallbackContext):
 	"""
@@ -52,6 +55,7 @@ async def get_signal_type(update: Update, context: CallbackContext):
 	"""
 	user_id = get_chat_id(update)
 	signal_type = update.callback_query.data.removeprefix('SAMPLE_SIGNALS_')
+	log_user_action_detail(update, f'SIGNAL_TYPE_{signal_type}')
 	context.user_data['signal_type'] = signal_type
 
 	# Get the message ID for this signal type

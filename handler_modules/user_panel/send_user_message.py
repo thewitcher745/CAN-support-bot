@@ -61,7 +61,6 @@ async def send_user_message(update: Update, context: CallbackContext):
 	if update.callback_query.data == 'RESULTS':
 		keyboard = fixed_keyboards.RESULTS
 
-
 	elif update.callback_query.data == 'OFFERS':
 		keyboard = fixed_keyboards.OFFERS
 	elif update.callback_query.data == 'HOW_IT_WORKS':

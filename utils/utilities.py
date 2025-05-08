@@ -662,9 +662,6 @@ def is_user_in_non_interested_category(user_id):
 
 	# Check if user is in any category other than INTERESTED (category_id='0')
 	for category_id, category in user_lists[locale].items():
-		print(category)
 		if category_id != '0' and str(user_id) in category['users']:
-			print('User is in a non-INTERESTED category')
 			return True
-	print('User is not in a non-INTERESTED category')
 	return False
